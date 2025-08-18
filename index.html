@@ -30,7 +30,6 @@
   .background { position: fixed; inset: 0; z-index: -1; background: linear-gradient(45deg, #ff4d4d, #4dffef, #4d4dff, #ff4dff); background-size: 600% 600%; filter: blur(120px); animation: moveBG 60s linear infinite; }
   @keyframes moveBG { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
 
-  /* Header normal */
   header { padding: 2rem; text-align: center; position: relative; transition: opacity 0.5s ease, transform 0.5s ease; }
   header img.logo { width: 100px; transition: width 0.3s ease; }
   .header-buttons { position: absolute; top: 20px; right: 20px; display:flex; gap:10px; }
@@ -51,11 +50,33 @@
   .card h3, .card p { margin:0; }
   .card svg { width:40px; height:40px; fill: var(--icon-color); flex-shrink:0; }
 
-  footer { text-align:center; padding:2rem; font-size:0.9rem; color: var(--text-color); }
-  footer svg { width:24px; height:24px; fill: var(--icon-color); vertical-align: middle; transition: transform 0.2s ease; }
-  footer svg:hover { transform: scale(1.2); }
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding:2rem;
+    font-size:0.9rem;
+    color: var(--text-color);
+  }
+  footer a { display:inline-block; color: var(--icon-color); transition: transform 0.2s ease; }
+  footer a:hover { transform: scale(1.2); }
 
-  @media(max-width:600px){ #stickyHeader { flex-direction: row; } .card { flex-direction: column; text-align: center; } }
+  @media(max-width:600px){ 
+    #stickyHeader { flex-direction: row; } 
+    .card { flex-direction: column; text-align: center; } 
+    /* Mobile buttons cachés par défaut avec smooth */
+    #stickyHeader .btn { 
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      display: inline-block;
+    }
+    #stickyHeader.show-buttons .btn {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
 </head>
 <body>
@@ -109,17 +130,26 @@
 </main>
 
 <footer>
-  © 2025 MetaCore
+  <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
+    <span>© 2025 MetaCore</span>
+    <a href="https://instagram.com/metacore.fr" target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+        <path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.9.2 2.3.4.5.2.9.4 1.3.8.4.4.6.8.8 1.3.2.4.3 1.1.4 2.3.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.9-.4 2.3-.2.5-.4.9-.8 1.3-.4.4-.8.6-1.3.8-.4.2-1.1.3-2.3.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.9-.2-2.3-.4-.5-.2-.9-.4-1.3-.8-.4-.4-.6-.8-.8-1.3-.2-.4-.3-1.1-.4-2.3C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.9.4-2.3.2-.5.4-.9.8-1.3.4-.4.8-.6 1.3-.8.4-.2 1.1-.3 2.3-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.7.2-2.1.3-.5.1-.8.3-1.1.6-.3.3-.5.6-.6 1.1-.1.4-.2 1-.3 2.1-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.7.3 2.1.1.5.3.8.6 1.1.3.3.6.5 1.1.6.4.1 1 .2 2.1.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.7-.2 2.1-.3.5-.1.8-.3 1.1-.6.3-.3.5-.6.6-1.1.1-.4.2-1 .3-2.1.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.7-.3-2.1-.1-.5-.3-.8-.6-1.1-.3-.3-.6-.5-1.1-.6-.4-.1-1-.2-2.1-.3-1.2-.1-1.6-.1-4.7-.1zM12 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm5-10.6a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/>
+      </svg>
+    </a>
+  </div>
 </footer>
 
 <script>
   const sticky = document.getElementById('stickyHeader');
   const mainHeader = document.getElementById('mainHeader');
 
+  let lastScroll = 0;
+
   window.addEventListener('scroll', () => {
     let scroll = window.scrollY;
 
-    // Sticky header apparition progressive
+    // Sticky header apparition
     if(scroll > 150){
       sticky.style.top = '0';
       sticky.style.opacity = '1';
@@ -128,7 +158,7 @@
       sticky.style.opacity = '0';
     }
 
-    // Disparition progressive header principal
+    // Disparition header principal
     if(scroll < 150){
       mainHeader.style.opacity = 1 - scroll/150;
       mainHeader.style.transform = `translateY(-${scroll/3}px)`;
@@ -136,6 +166,17 @@
       mainHeader.style.opacity = 0;
       mainHeader.style.transform = 'translateY(-50px)';
     }
+
+    // Affichage/masquage des boutons sur mobile
+    if(window.innerWidth <= 600){
+      if(scroll > lastScroll){ 
+        sticky.classList.add('show-buttons'); 
+      } else { 
+        sticky.classList.remove('show-buttons'); 
+      }
+    }
+
+    lastScroll = scroll;
   });
 
   // Halo cartes
