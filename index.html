@@ -28,12 +28,10 @@
   .background { position: fixed; inset: 0; z-index: -1; background: linear-gradient(45deg, #ff4d4d, #4dffef, #4d4dff, #ff4dff); background-size: 600% 600%; filter: blur(120px); animation: moveBG 60s linear infinite; }
   @keyframes moveBG { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
 
-  /* Header normal */
   header { padding: 2rem; text-align: center; position: relative; transition: opacity 0.5s ease, transform 0.5s ease; }
   header img.logo { width: 100px; transition: width 0.3s ease; }
   .header-buttons { position: absolute; top: 20px; right: 20px; display:flex; gap:10px; }
 
-  /* Sticky header */
   #stickyHeader { position: fixed; top:-100px; left:0; right:0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display:flex; align-items:center; justify-content: space-between; padding:0.5rem 2rem; transition: top 0.3s ease, opacity 0.3s ease; z-index: 100; opacity:0; }
   #stickyHeader img { width:50px; transition: width 0.3s ease; }
   #stickyHeader .btn { margin-left: 10px; }
@@ -53,7 +51,18 @@
   footer svg { width:24px; height:24px; fill: var(--icon-color); vertical-align: middle; transition: transform 0.2s ease; }
   footer svg:hover { transform: scale(1.2); }
 
-  @media(max-width:600px){ #stickyHeader { flex-direction: row; } .card { flex-direction: column; text-align: center; } }
+  @media(max-width:600px){ 
+    #stickyHeader { flex-direction: row; } 
+    .card { flex-direction: column; text-align: center; } 
+  }
+
+  /* Cacher les boutons Réserver et Tarifs sur mobile */
+  @media (max-width: 600px) {
+    header .header-buttons,
+    #stickyHeader div a.btn {
+      display: none;
+    }
+  }
 </style>
 </head>
 <body>
@@ -72,7 +81,6 @@
   </div>
 </header>
 
-<!-- Sticky header -->
 <div id="stickyHeader">
   <img src="LogoTriangle.png" alt="Logo MetaCore">
   <div>
@@ -95,7 +103,6 @@
     <div><h3>Installation OS 💾</h3><p>Installation Windows ou tout autre OS sur mesure 🖥️</p></div>
   </div>
 
-  <!-- FAQ et Avis -->
   <section id="faq">
     <h2>FAQ</h2>
     <p>Questions fréquentes ici...</p>
@@ -117,7 +124,6 @@
   window.addEventListener('scroll', () => {
     let scroll = window.scrollY;
 
-    // Sticky header apparition progressive
     if(scroll > 150){
       sticky.style.top = '0';
       sticky.style.opacity = '1';
@@ -126,7 +132,6 @@
       sticky.style.opacity = '0';
     }
 
-    // Disparition progressive header principal
     if(scroll < 150){
       mainHeader.style.opacity = 1 - scroll/150;
       mainHeader.style.transform = `translateY(-${scroll/3}px)`;
@@ -136,12 +141,11 @@
     }
   });
 
-  // Halo cartes
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('mousemove', e => {
       const rect = card.getBoundingClientRect();
       card.style.setProperty('--x', (e.clientX - rect.left) + 'px');
-      card.style.setProperty('--y', (e.clientY - rect.top) + 'px');
+      card.style.setProperty('--y', (e.clientY - rect.top) + 'px';
     });
     card.addEventListener('mouseleave', () => {
       card.style.setProperty('--x', '50%');
