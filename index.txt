@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MetaCore - Dépannage et Optimisation</title>
+<link rel="icon" href="iconetriangle.ico" type="image/x-icon">
+
 <style>
   :root {
     --bg-color: #111;
@@ -42,7 +44,7 @@
   .btn-primary { background: var(--btn-primary); }
 
   main { max-width: 900px; margin:auto; padding:2rem; }
-  .card { display:flex; align-items:center; gap:1rem; background: var(--card-bg); backdrop-filter: blur(10px); padding:1.5rem; border-radius:1rem; margin:1rem 0; position: relative; overflow:hidden; }
+  .card { display:flex; align-items:center; gap:1rem; background: var(--card-bg); backdrop-filter: blur(10px); padding:1.5rem; border-radius:1rem; margin:1rem 0; position: relative; overflow:hidden; cursor:pointer; text-decoration:none; color:var(--text-color); }
   .card::before { content: ''; position:absolute; top:var(--y,50%); left:var(--x,50%); width:200%; height:200%; background: radial-gradient(circle 100px at center, rgba(77,255,255,0.15), transparent 80%); transform: translate(-50%, -50%); transition: top 0.1s, left 0.1s, opacity 0.3s; pointer-events:none; opacity:0; }
   .card:hover::before { opacity:1; }
   .card:hover { transform: translateY(-5px); box-shadow:0 15px 30px rgba(0,255,255,0.2); }
@@ -82,18 +84,18 @@
 </div>
 
 <main>
-  <div class="card">
+  <a href="depannage.html" class="card">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M2 18h20v2H2z"/></svg>
     <div><h3>Dépannage 🛠️</h3><p>Votre ordinateur ne s'allume plus ? Problèmes et bugs résolus rapidement 💻</p></div>
-  </div>
-  <div class="card">
+  </a>
+  <a href="optimisation.html" class="card">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 22l20-10L2 2v7l13 3-13 3v7z"/></svg>
     <div><h3>Optimisation 🚀</h3><p>Votre PC lent ou pas optimal pour le gaming ? On booste ses performances ⚡</p></div>
-  </div>
-  <div class="card">
+  </a>
+  <a href="installation.html" class="card">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5z"/></svg>
     <div><h3>Installation OS 💾</h3><p>Installation Windows ou tout autre OS sur mesure 🖥️</p></div>
-  </div>
+  </a>
 
   <!-- FAQ et Avis -->
   <section id="faq">
