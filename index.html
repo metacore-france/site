@@ -34,13 +34,12 @@
   header img.logo { width: 100px; transition: width 0.3s ease; }
   .header-buttons { position: absolute; top: 20px; right: 20px; display:flex; gap:10px; }
 
-  /* Sticky header */
   #stickyHeader { position: fixed; top:-100px; left:0; right:0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display:flex; align-items:center; justify-content: space-between; padding:0.5rem 2rem; transition: top 0.3s ease, opacity 0.3s ease; z-index: 100; opacity:0; }
   #stickyHeader img { width:50px; transition: width 0.3s ease; }
-  #stickyHeader .btn { margin-left: 10px; }
+  #stickyHeader .btn { margin-left: 10px; display:flex; align-items:center; justify-content:center; }
 
-  .btn { padding: 12px 24px; border-radius: 12px; font-weight: bold; text-decoration:none; color:white; background: var(--btn-secondary); position:relative; overflow:hidden; }
-  .btn-primary { background: var(--btn-primary); }
+  .btn { padding: 8px; border-radius: 50%; font-weight: bold; text-decoration:none; color:white; position:relative; cursor:pointer; display:flex; align-items:center; justify-content:center; background: transparent; border:none; font-size:1.2rem; transition: transform 0.2s; }
+  .btn:hover { transform: scale(1.2); }
 
   main { max-width: 900px; margin:auto; padding:2rem; }
   .card { display:flex; align-items:center; gap:1rem; background: var(--card-bg); backdrop-filter: blur(10px); padding:1.5rem; border-radius:1rem; margin:1rem 0; position: relative; overflow:hidden; cursor:pointer; text-decoration:none; color:var(--text-color); }
@@ -50,32 +49,19 @@
   .card h3, .card p { margin:0; }
   .card svg { width:40px; height:40px; fill: var(--icon-color); flex-shrink:0; }
 
-  footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding:2rem;
-    font-size:0.9rem;
-    color: var(--text-color);
-  }
-  footer a { display:inline-block; color: var(--icon-color); transition: transform 0.2s ease; }
+  footer { margin-top:2rem; padding:2rem 0; color: var(--text-color); text-align:center; }
+  footer a { color: var(--icon-color); text-decoration:none; transition: transform 0.2s ease; }
   footer a:hover { transform: scale(1.2); }
+  .iban-container { display:flex; align-items:center; gap:5px; justify-content:center; flex-wrap:wrap; margin-top:1rem; }
+  .iban-container input { border:none; background: transparent; color: var(--text-color); font-weight:bold; width:auto; max-width:250px; text-align:center; }
+  .copy-btn { padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer; border:none; background: var(--btn-primary); color:#fff; }
+
+  .footer-ig { margin-bottom:1rem; }
+  .footer-ig svg { width:48px; height:48px; }
 
   @media(max-width:600px){ 
     #stickyHeader { flex-direction: row; } 
     .card { flex-direction: column; text-align: center; } 
-    /* Mobile buttons cachés par défaut avec smooth */
-    #stickyHeader .btn { 
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      display: inline-block;
-    }
-    #stickyHeader.show-buttons .btn {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 </style>
 </head>
@@ -95,12 +81,13 @@
   </div>
 </header>
 
-<!-- Sticky header -->
 <div id="stickyHeader">
   <img src="LogoTriangle.png" alt="Logo MetaCore">
-  <div>
+  <div style="display:flex; align-items:center; gap:10px;">
     <a href="https://calendly.com/metacorerepair/30min" target="_blank" class="btn btn-primary">Réserver</a>
     <a href="tarifs.html" class="btn">Tarifs</a>
+    <!-- Discret bouton 💰 -->
+    <button class="btn" onclick="document.getElementById('soutenir').scrollIntoView({behavior:'smooth'});">💰</button>
   </div>
 </div>
 
@@ -118,7 +105,6 @@
     <div><h3>Installation OS 💾</h3><p>Installation Windows ou tout autre OS sur mesure 🖥️</p></div>
   </a>
 
-  <!-- FAQ et Avis -->
   <section id="faq">
     <h2>FAQ</h2>
     <p>Questions fréquentes ici...</p>
@@ -130,13 +116,25 @@
 </main>
 
 <footer>
-  <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
-    <span>© 2025 MetaCore</span>
+  <!-- Logo Instagram centré -->
+  <div class="footer-ig">
     <a href="https://instagram.com/metacore.fr" target="_blank">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.9.2 2.3.4.5.2.9.4 1.3.8.4.4.6.8.8 1.3.2.4.3 1.1.4 2.3.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.9-.4 2.3-.2.5-.4.9-.8 1.3-.4.4-.8.6-1.3.8-.4.2-1.1.3-2.3.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.9-.2-2.3-.4-.5-.2-.9-.4-1.3-.8-.4-.4-.6-.8-.8-1.3-.2-.4-.3-1.1-.4-2.3C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.9.4-2.3.2-.5.4-.9.8-1.3.4-.4.8-.6 1.3-.8.4-.2 1.1-.3 2.3-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.7.2-2.1.3-.5.1-.8.3-1.1.6-.3.3-.5.6-.6 1.1-.1.4-.2 1-.3 2.1-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.7.3 2.1.1.5.3.8.6 1.1.3.3.6.5 1.1.6.4.1 1 .2 2.1.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.7-.2 2.1-.3.5-.1.8-.3 1.1-.6.3-.3.5-.6.6-1.1.1-.4.2-1 .3-2.1.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.7-.3-2.1-.1-.5-.3-.8-.6-1.1-.3-.3-.6-.5-1.1-.6-.4-.1-1-.2-2.1-.3-1.2-.1-1.6-.1-4.7-.1zM12 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm5-10.6a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/>
       </svg>
     </a>
+  </div>
+
+  <div>© 2025 MetaCore</div>
+
+  <div id="soutenir" style="margin-top:2rem; padding:1.5rem; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-radius:12px; max-width:700px; margin-left:auto; margin-right:auto; text-align:center;">
+    <h2>💖 Soutenir MetaCore</h2>
+    <p>Si tu veux soutenir notre travail et aider MetaCore à grandir, tu peux faire un don direct sur notre compte bancaire. Chaque contribution compte !</p>
+    <div class="iban-container">
+      <input type="text" id="iban" value="FR76 2823 3000 0176 9510 0980 019" readonly>
+      <button class="copy-btn" onclick="copyIBAN()">Copier</button>
+    </div>
+    <p style="margin-top:0.5rem; font-size:0.85rem;">Ton soutien nous permet d'améliorer nos services et de proposer plus de contenus utiles.</p>
   </div>
 </footer>
 
@@ -144,12 +142,8 @@
   const sticky = document.getElementById('stickyHeader');
   const mainHeader = document.getElementById('mainHeader');
 
-  let lastScroll = 0;
-
   window.addEventListener('scroll', () => {
     let scroll = window.scrollY;
-
-    // Sticky header apparition
     if(scroll > 150){
       sticky.style.top = '0';
       sticky.style.opacity = '1';
@@ -158,7 +152,6 @@
       sticky.style.opacity = '0';
     }
 
-    // Disparition header principal
     if(scroll < 150){
       mainHeader.style.opacity = 1 - scroll/150;
       mainHeader.style.transform = `translateY(-${scroll/3}px)`;
@@ -166,20 +159,8 @@
       mainHeader.style.opacity = 0;
       mainHeader.style.transform = 'translateY(-50px)';
     }
-
-    // Affichage/masquage des boutons sur mobile
-    if(window.innerWidth <= 600){
-      if(scroll > lastScroll){ 
-        sticky.classList.add('show-buttons'); 
-      } else { 
-        sticky.classList.remove('show-buttons'); 
-      }
-    }
-
-    lastScroll = scroll;
   });
 
-  // Halo cartes
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('mousemove', e => {
       const rect = card.getBoundingClientRect();
@@ -191,7 +172,20 @@
       card.style.setProperty('--y', '50%');
     });
   });
+
+  function copyIBAN() {
+    const ibanInput = document.getElementById('iban');
+    ibanInput.select();
+    ibanInput.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    alert("IBAN copié !");
+  }
 </script>
 
 </body>
 </html>
+
+
+
+
+
