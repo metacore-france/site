@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MetaCore - Installation OS</title>
+<style>
+  :root { --bg-color:#111; --text-color:#fff; --card-bg:rgba(255,255,255,0.05); --btn-primary:#ff4d4d; --btn-secondary:#4d79ff; }
+  @media(prefers-color-scheme:light){ :root{--bg-color:#f5f5f5;--text-color:#111;--card-bg:rgba(0,0,0,0.05);--btn-primary:#ff4d4d;--btn-secondary:#4d79ff;} }
+  body{margin:0;font-family:'Segoe UI',sans-serif;background:var(--bg-color);color:var(--text-color);}
+  header{padding:2rem;text-align:center;position:relative;}
+  header img.logo{width:100px;}
+  .header-buttons{position:absolute;top:20px;right:20px;display:flex;gap:10px;}
+  .btn{padding:12px 24px;border-radius:12px;font-weight:bold;text-decoration:none;color:white;background:var(--btn-secondary);}
+  .btn-primary{background:var(--btn-primary);}
+  main{max-width:900px;margin:auto;padding:2rem;}
+  .tarif-card{background:var(--card-bg);backdrop-filter:blur(10px);padding:1.5rem;border-radius:1rem;margin:1rem 0;}
+  @media(max-width:600px){header .header-buttons{flex-direction:column;top:10px;right:10px;}.tarif-card{text-align:center;}}
+</style>
+</head>
+<body>
+<header>
+  <img src="LogoTriangle.png" alt="Logo MetaCore" class="logo">
+  <div class="header-buttons">
+    <a href="index.html" class="btn">Accueil</a>
+    <a href="tarifs.html" class="btn">Tarifs</a>
+  </div>
+</header>
+
+<main>
+  <h1>Installation OS 💾</h1>
+  <div class="tarif-card">
+    <p>Installation Windows ou autre OS sur mesure sur votre PC ou laptop.</p>
+    <p>Tarif : 5€</p>
+    <a href="#" class="btn btn-primary">Payer par Revolut</a>
+  </div>
+</main>
+
+</body>
+</html>
