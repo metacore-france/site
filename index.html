@@ -55,14 +55,6 @@
     #stickyHeader { flex-direction: row; } 
     .card { flex-direction: column; text-align: center; } 
   }
-
-  /* Cacher les boutons Réserver et Tarifs sur mobile */
-  @media (max-width: 600px) {
-    header .header-buttons,
-    #stickyHeader div a.btn {
-      display: none;
-    }
-  }
 </style>
 </head>
 <body>
@@ -120,10 +112,18 @@
 <script>
   const sticky = document.getElementById('stickyHeader');
   const mainHeader = document.getElementById('mainHeader');
+  const mainHeaderButtons = document.querySelector('#mainHeader .header-buttons');
+
+  // Masquer les boutons au départ sur mobile
+  if(window.innerWidth <= 600){
+    mainHeaderButtons.style.opacity = 0;
+    mainHeaderButtons.style.pointerEvents = 'none';
+  }
 
   window.addEventListener('scroll', () => {
     let scroll = window.scrollY;
 
+    // Sticky header apparition progressive
     if(scroll > 150){
       sticky.style.top = '0';
       sticky.style.opacity = '1';
@@ -132,6 +132,7 @@
       sticky.style.opacity = '0';
     }
 
+    // Disparition progressive header principal
     if(scroll < 150){
       mainHeader.style.opacity = 1 - scroll/150;
       mainHeader.style.transform = `translateY(-${scroll/3}px)`;
@@ -139,13 +140,25 @@
       mainHeader.style.opacity = 0;
       mainHeader.style.transform = 'translateY(-50px)';
     }
+
+    // Afficher les boutons sur mobile après scroll
+    if(window.innerWidth <= 600){
+      if(scroll > 150){
+        mainHeaderButtons.style.opacity = 1;
+        mainHeaderButtons.style.pointerEvents = 'auto';
+      } else {
+        mainHeaderButtons.style.opacity = 0;
+        mainHeaderButtons.style.pointerEvents = 'none';
+      }
+    }
   });
 
+  // Halo cartes
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('mousemove', e => {
       const rect = card.getBoundingClientRect();
       card.style.setProperty('--x', (e.clientX - rect.left) + 'px');
-      card.style.setProperty('--y', (e.clientY - rect.top) + 'px';
+      card.style.setProperty('--y', (e.clientY - rect.top) + 'px');
     });
     card.addEventListener('mouseleave', () => {
       card.style.setProperty('--x', '50%');
