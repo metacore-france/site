@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -34,16 +34,39 @@ body {
   overflow-x: hidden;
   user-select: none;
 }
-.background {
+
+/* ==== VIDEO DE FOND ==== */
+#bgVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  filter: blur(8px) brightness(0.85); /* moins sombre qu’avant */
+  transition: transform 0.3s ease-out;
+}
+
+/* Overlay en dégradé (haut et bas seulement) */
+.background-overlay {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(45deg, #ff4d4d, #4dffef, #4d4dff, #ff4dff);
-  background-size: 600% 600%;
-  filter: blur(120px);
-  animation: moveBG 60s linear infinite;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.4) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(0,0,0,0.4) 100%
+  );
+  pointer-events: none;
 }
-@keyframes moveBG { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+
+/* Ombres sur le texte et les boutons pour ressortir */
+h1, h2, h3, p, .btn {
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
 
 header {
   padding: 2rem;
@@ -140,14 +163,17 @@ footer a:hover { transform: scale(1.2); }
 @media(max-width:600px){
   #stickyHeader { flex-direction: row; }
   .card { flex-direction: column; text-align: center; }
-  .header-buttons { display:none; } /* masqué sur mobile */
+  .header-buttons { display:none; }
 }
-
 </style>
 </head>
 <body>
 
-<div class="background"></div>
+<!-- ====== FOND VIDEO ====== -->
+<video autoplay muted loop playsinline id="bgVideo">
+  <source src="bg.mp4" type="video/mp4">
+</video>
+<div class="background-overlay"></div>
 
 <header id="mainHeader">
   <img src="LogoTriangle.png" alt="Logo MetaCore" class="logo">
@@ -192,7 +218,6 @@ footer a:hover { transform: scale(1.2); }
   </div>
   <div>© 2025 MetaCore</div>
 
-  <!-- Lien vers la présentation -->
   <div style="margin-top:1rem;">
     <a href="presentation.html" class="btn">Qui suis-je ?</a>
   </div>
@@ -208,9 +233,9 @@ footer a:hover { transform: scale(1.2); }
 </footer>
 
 <script>
+// Sticky header
 const sticky = document.getElementById('stickyHeader');
 const mainHeader = document.getElementById('mainHeader');
-
 window.addEventListener('scroll', () => {
   let scroll = window.scrollY;
   if(scroll > 150){
@@ -220,7 +245,6 @@ window.addEventListener('scroll', () => {
     sticky.style.top = '-100px';
     sticky.style.opacity = '0';
   }
-
   if(scroll < 150){
     mainHeader.style.opacity = 1 - scroll/150;
     mainHeader.style.transform = `translateY(-${scroll/3}px)`;
@@ -230,6 +254,7 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// Effet hover sur les cartes
 document.querySelectorAll('.card').forEach(card => {
   card.addEventListener('mousemove', e => {
     const rect = card.getBoundingClientRect();
@@ -242,6 +267,7 @@ document.querySelectorAll('.card').forEach(card => {
   });
 });
 
+// Copier IBAN
 function copyIBAN() {
   const ibanInput = document.getElementById('iban');
   ibanInput.select();
