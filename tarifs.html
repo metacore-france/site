@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MetaCore - Tarifs</title>
 <link rel="icon" href="iconetriangle.ico" type="image/x-icon">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root {
   --bg-color: #111;
@@ -14,120 +16,32 @@
   --btn-primary: #ff4d4d;
   --btn-secondary: #4d79ff;
 }
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-color: #f5f5f5;
-    --text-color: #111;
-    --card-bg: rgba(0,0,0,0.05);
-    --icon-color: #111;
-    --btn-primary: #ff4d4d;
-    --btn-secondary: #4d79ff;
-  }
-}
-
-body {
-  margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background: var(--bg-color);
-  color: var(--text-color);
-  overflow-x: hidden;
-  user-select: none;
-}
-
-input, textarea { user-select: text; }
-
+body { margin:0; font-family:'Segoe UI',sans-serif; background:var(--bg-color); color:var(--text-color); }
+input { user-select:text; }
 .background {
   position: fixed; inset:0; z-index:-1;
-  background: linear-gradient(45deg, #ff4d4d, #4dffef, #4d4dff, #ff4dff);
-  background-size: 600% 600%;
+  background: linear-gradient(45deg,#ff4d4d,#4dffef,#4d4dff,#ff4dff);
+  background-size:600% 600%;
   filter: blur(120px);
   animation: moveBG 60s linear infinite;
 }
-@keyframes moveBG { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+@keyframes moveBG {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-header {
-  padding: 2rem;
-  text-align: center;
-  position: relative;
-}
-header img.logo { width: 100px; pointer-events:none; -webkit-user-drag:none; }
+header { padding:2rem; text-align:center; }
+header img.logo { width:100px; pointer-events:none; -webkit-user-drag:none; }
 
-.back-btn {
-  position: fixed;
-  top:20px;
-  left:20px;
-  font-size:1.5rem;
-  background: transparent;
-  border:none;
-  color: var(--text-color);
-  cursor:pointer;
-  transition: transform 0.2s;
-}
-.back-btn:hover { transform: scale(1.2); }
-
-main {
-  max-width: 1000px;
-  margin: auto;
-  padding: 2rem;
-  display:flex;
-  flex-wrap:wrap;
-  gap:2rem;
-  justify-content:center;
-}
-
-.card {
-  background: var(--card-bg);
-  backdrop-filter: blur(10px);
-  border-radius: 1rem;
-  padding: 2rem;
-  flex: 1 1 250px;
-  max-width: 300px;
-  text-align: center;
-  position: relative;
-  cursor:pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0,255,255,0.2);
-}
-
-.card h3 { margin:0 0 1rem 0; }
-.card p { margin:0.5rem 0; font-size:0.95rem; }
-
-.best-choice {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: gold;
-  color: #111;
-  padding: 0.3rem 0.8rem;
-  border-radius: 12px;
-  font-weight: bold;
-  font-size:0.8rem;
-}
-
+.back-btn { position:fixed; top:20px; left:20px; font-size:1.5rem; background:transparent; border:none; color:var(--text-color); cursor:pointer; }
+main { max-width:1000px; margin:auto; padding:2rem; display:flex; flex-wrap:wrap; gap:2rem; justify-content:center; }
+.card { background:var(--card-bg); backdrop-filter:blur(10px); border-radius:1rem; padding:2rem; flex:1 1 250px; max-width:300px; text-align:center; transition:.2s; position:relative; }
+.card:hover { transform:translateY(-5px); box-shadow:0 15px 30px rgba(0,255,255,0.2); }
+.card h3{margin:0 0 1rem 0;} .card p{margin:.5rem 0; font-size:.95rem;}
+.best-choice { position:absolute; top:-10px; right:-10px; background:gold; color:#111; padding:.3rem .8rem; border-radius:12px; font-weight:bold; font-size:.8rem; }
 .price { font-size:2rem; font-weight:bold; margin:1rem 0; }
-.btn {
-  display:inline-block;
-  padding: 0.7rem 1.5rem;
-  border-radius: 8px;
-  font-weight:bold;
-  color:#fff;
-  text-decoration:none;
-  margin-top:1rem;
-  transition: transform 0.2s;
-}
-.btn:hover { transform: scale(1.05); }
-.btn-primary { background: var(--btn-secondary); }
-.btn-red { background: var(--btn-primary); }
+.btn { display:inline-block; padding:.7rem 1.5rem; border-radius:8px; font-weight:bold; color:#fff; text-decoration:none; margin-top:1rem; }
+.btn-primary{background:var(--btn-secondary);} .btn-red{background:var(--btn-primary);}
+footer { margin-top:2rem; padding:2rem 0; text-align:center; }
 
-footer {
-  margin-top:2rem;
-  padding:2rem 0;
-  color: var(--text-color);
-  text-align:center;
-}
+#overlay{display:none;}
 </style>
 </head>
 <body>
@@ -139,41 +53,36 @@ footer {
   <p>Choisis l’abonnement qui te convient et booste ton PC !</p>
 </header>
 
-<!-- Flèche retour -->
 <button class="back-btn" onclick="history.back()">⬅</button>
 
 <main>
-  <!-- Abonnement 1 -->
   <div class="card">
     <h3>Abonnement Basic</h3>
     <div class="price">19,99€ / mois</div>
-    <p>5 réparations par mois<br>2 conseils personnalisés</p>
-    <a href="reservation.html" class="btn btn-primary">Choisir</a>
+    <p>✅ 2 réparations par mois<br>✅ 2 conseils personnalisés<br>❌ optimisation<br>❌ livraison express</p>
+    <button class="btn btn-primary choose-btn" data-price="19.99" data-label="Abonnement Basic">Choisir</button>
   </div>
 
-  <!-- Abonnement 2 - Meilleur choix -->
   <div class="card">
     <div class="best-choice">Meilleur choix</div>
     <h3>Abonnement Standard</h3>
     <div class="price">29,99€ / mois</div>
-    <p>10 réparations par mois<br>5 conseils personnalisés</p>
-    <a href="reservation.html" class="btn btn-primary">Choisir</a>
+    <p>✅ 5 Réparations par mois<br>✅ 5 Conseils personnalisés<br>✅ Optimisation offerte<br>❌ Livraison rapide offerte</p>
+    <button class="btn btn-primary choose-btn" data-price="29.99" data-label="Abonnement Standard">Choisir</button>
   </div>
 
-  <!-- Abonnement 3 -->
   <div class="card">
-    <h3>Abonnement Premium</h3>
+    <h3>Abonnement Ultime</h3>
     <div class="price">49,99€ / mois</div>
-    <p>20 réparations par mois<br>10 conseils personnalisés</p>
-    <a href="reservation.html" class="btn btn-primary">Choisir</a>
+    <p>✅ 20 Réparations par mois<br>✅ 10 Conseils personnalisés<br>✅ Optimisation offerte<br>✅ Livraison rapide offerte<br>✅ Montage PC offert<br>✅ Dépannage express offert<br>✅ 20€ déduits sur pièces</p>
+    <button class="btn btn-primary choose-btn" data-price="49.99" data-label="Abonnement Ultime">Choisir</button>
   </div>
 
-  <!-- Dépannage express -->
   <div class="card" style="flex-basis:100%;">
     <h3>Dépannage Express</h3>
     <div class="price">49,99€</div>
     <p>Intervention rapide, idéal pour les urgences 💻⚡</p>
-    <a href="reservation.html" class="btn btn-red">Réserver maintenant</a>
+    <button class="btn btn-red choose-btn" data-price="49.99" data-label="Dépannage Express">Réserver maintenant</button>
   </div>
 </main>
 
@@ -181,6 +90,103 @@ footer {
   <div>© 2025 MetaCore</div>
 </footer>
 
+<!-- Overlay -->
+<div id="overlay" class="fixed inset-0 bg-black/50 hidden z-40"></div>
+
+<!-- Bottom sheet -->
+<div id="paymentSheet" class="fixed left-0 right-0 bottom-[-100%] bg-gray-800 rounded-t-2xl shadow-2xl transition-all duration-500 ease-out z-50">
+  <div class="p-6 relative">
+    <button id="closeBtn" class="hidden md:block absolute right-4 top-4 text-gray-300 hover:text-white text-2xl">&times;</button>
+    <h2 class="text-xl font-bold mb-4">💳 Paiement MetaCore</h2>
+    <p id="offerTitle" class="text-gray-300 mb-6"></p>
+
+    <div id="qrWrapper" class="flex flex-col items-center space-y-2 mb-6">
+      <div id="qrcode" class="p-3 bg-white rounded-lg"></div>
+      <span class="text-sm text-gray-400">Scannez dans votre application bancaire</span>
+    </div>
+
+    <div class="flex flex-col items-center space-y-2">
+      <input id="iban" value="FR76 2823 3000 0176 9510 0980 019 (MetaCore)" readonly class="bg-gray-700 px-4 py-2 rounded-lg text-center font-bold w-full max-w-md">
+      <button onclick="copyIBAN()" class="px-4 py-2 bg-blue-500 rounded-lg">Copier IBAN</button>
+    </div>
+
+    <!-- Instructions universelles -->
+    <div id="qrHelp" class="flex items-center gap-2 mt-4 cursor-pointer text-blue-300">
+      <span>ℹ️</span>
+      <span>Comment utiliser ce QR / IBAN</span>
+    </div>
+    <div id="qrPopup" class="hidden absolute top-16 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white p-4 rounded-lg w-80 z-50">
+      <p>Pour effectuer votre paiement :</p>
+      <ol class="list-decimal list-inside text-sm mt-2">
+        <li>Ouvrez votre application bancaire.</li>
+        <li>Ajoutez un nouveau bénéficiaire si nécessaire.</li>
+        <li>Scannez le QR code ou copiez l’IBAN affiché.</li>
+        <li>Le libellé sera automatiquement celui de l’abonnement choisi.</li>
+      </ol>
+      <button onclick="toggleQrPopup()" class="mt-2 px-2 py-1 bg-blue-500 rounded">Fermer</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const sheet = document.getElementById("paymentSheet");
+const overlay = document.getElementById("overlay");
+const closeBtn = document.getElementById("closeBtn");
+const qrWrapper = document.getElementById("qrWrapper");
+const offerTitle = document.getElementById("offerTitle");
+const qrcodeDiv = document.getElementById("qrcode");
+const qrHelp = document.getElementById("qrHelp");
+const qrPopup = document.getElementById("qrPopup");
+
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+document.querySelectorAll(".choose-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const price = btn.dataset.price;
+    const label = btn.dataset.label;
+    offerTitle.textContent = `${label} - ${price}€`;
+    sheet.style.bottom = "0";
+    overlay.classList.remove("hidden");
+    qrcodeDiv.innerHTML="";
+    qrWrapper.classList.remove("hidden");
+    new QRCode(qrcodeDiv, {
+      text: `BCD
+001
+1
+SCT
+REVOFRP2
+Morgan DUPUY
+FR7628233000017695100980019
+EUR${price}
+${label}`,
+      width:128,height:128,
+      colorDark:"#000",colorLight:"#fff"
+    });
+  });
+});
+
+function closeSheet(){
+  sheet.style.bottom="-100%";
+  overlay.classList.add("hidden");
+  qrWrapper.classList.add("hidden");
+  qrcodeDiv.innerHTML="";
+}
+closeBtn.addEventListener("click", closeSheet);
+overlay.addEventListener("click", closeSheet);
+
+function copyIBAN(){
+  const iban=document.getElementById("iban");
+  iban.select(); iban.setSelectionRange(0,99999);
+  document.execCommand("copy");
+  alert("IBAN copié !");
+}
+
+function toggleQrPopup(){
+  qrPopup.classList.toggle("hidden");
+}
+
+qrHelp.addEventListener("click", toggleQrPopup);
+</script>
 </body>
 </html>
-

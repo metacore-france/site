@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Pac-Man 2025 - Torche et Fantômes</title>
+<style>
+body { margin:0; background:#000; overflow:hidden; text-align:center; color:white; font-family:sans-serif;}
+canvas { display:block; margin:20px auto; border:3px solid #0f0; background:#111;}
+</style>
+</head>
+<body>
+<h1>Pac-Man 2025 🔦 Prototype</h1>
+<canvas id="game" width="560" height="560"></canvas>
+<p>Flèches = bouger | Ramassez 💡 pour allumer toute la map 15s</p>
+<div id="score">Score: 0</div>
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const tile = 40;
+const rows = 14, cols = 14;
+
+let score = 0;
+let lightOn = false;
+let lightTimer = 0;
+let lives = 3;
+
+// Map: 0=vide, 1=mur, 2=hacker, 3=bonus lumière
+let map = [
+ [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+ [1,0,0,0,0,0,1,0,0,0,0,0,3,1],
+ [1,0,1,1,1,0,1,0,1,1,1,0,0,1],
+ [1,2,1,0,0,0,0,0,0,0,1,0,2,1],
+ [1,0,1,0,1,1,1,1,1,0,1,0,0,1],
+ [1,0,0,0,0,0,2,0,0,0,0,0,0,1],
+ [1,1,1,0,1,0,1,1,1,0,1,0,1,1],
+ [1,0,0,0,1,0,0,0,0,0,1,0,0,1],
+ [1,0,1,1,1,1,1,0,1,1,1,1,0,1],
+ [1,2,0,0,0,0,0,0,0,0,0,0,2,1],
+ [1,0,1,0,1,1,1,1,1,0,1,0,0,1],
+ [1,0,0,0,0,0,2,0,0,0,0,0,0,1],
+ [1,0,0,0,0,0,0,0,0,0,0,0,2,1],
+ [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+];
+
+let pacman = {x:1,y:1,dx:0,dy:0,facing:"right"};
+
+// Fantômes
+let ghosts = [
+  {x:12,y:1,moveCounter:0},
+  {x:10,y:10,moveCounter:0},
+  {x:2,y:10,moveCounter:0}
+];
+
+// Dessin map
+function drawMap(){
+  ctx.font = "28px sans-serif";
+  for(let y=0;y<rows;y++){
+    for(let x=0;x<cols;x++){
+      if(map[y][x]===1){
+        ctx.fillStyle="#0af";
+        ctx.fillRect(x*tile,y*tile,tile,tile);
+      }
+    }
+  }
+}
+
+// Déplacement Pac-Man
+function movePacman(){
+  let nx=pacman.x+pacman.dx;
+  let ny=pacman.y+pacman.dy;
+  if(map[ny][nx]!==1){
+    pacman.x=nx; pacman.y=ny;
+    if(map[ny][nx]===2){ map[ny][nx]=0; score+=10; }
+    if(map[ny][nx]===3){ map[ny][nx]=0; lightOn=true; lightTimer=60*15; }
+    document.getElementById("score").innerText="Score: "+score;
+  }
+}
+
+// Déplacement fantômes lents
+function moveGhosts(){
+  ghosts.forEach(g=>{
+    g.moveCounter++;
+    if(g.moveCounter<30) return; // se déplace toutes les 30 frames
+    g.moveCounter=0;
+    let dirs=[[0,1],[0,-1],[1,0],[-1,0]];
+    let dir = dirs[Math.floor(Math.random()*dirs.length)];
+    let nx=g.x+dir[0], ny=g.y+dir[1];
+    if(map[ny][nx]!==1){ g.x=nx; g.y=ny; }
+  });
+}
+
+// Gestion clavier
+document.addEventListener("keydown", e=>{
+  if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) e.preventDefault();
+  if(e.key==="ArrowUp"){ pacman.dx=0; pacman.dy=-1; pacman.facing="up"; movePacman();}
+  if(e.key==="ArrowDown"){ pacman.dx=0; pacman.dy=1; pacman.facing="down"; movePacman();}
+  if(e.key==="ArrowLeft"){ pacman.dx=-1; pacman.dy=0; pacman.facing="left"; movePacman();}
+  if(e.key==="ArrowRight"){ pacman.dx=1; pacman.dy=0; pacman.facing="right"; movePacman();}
+});
+
+// Vérifie collisions Pac-Man/fantômes
+function checkCollisions(){
+  ghosts.forEach(g=>{
+    if(g.x===pacman.x && g.y===pacman.y){
+      lives--;
+      pacman.x=1; pacman.y=1;
+      if(lives<=0) alert("Game Over!");
+    }
+  });
+}
+
+// Ray-casting pour cône et visibilité
+let visibleCells = [];
+function computeVisibility(){
+  visibleCells = [];
+  const cx = pacman.x+0.5;
+  const cy = pacman.y+0.5;
+  const rays = 60;
+  const radius = 6;
+  const angleSpread = Math.PI/3;
+  let startAngle = 0;
+  if(pacman.facing==="up") startAngle=-Math.PI/2-angleSpread/2;
+  if(pacman.facing==="down") startAngle=Math.PI/2-angleSpread/2;
+  if(pacman.facing==="left") startAngle=Math.PI-angleSpread/2;
+  if(pacman.facing==="right") startAngle=0-angleSpread/2;
+
+  for(let i=0;i<=rays;i++){
+    let angle = startAngle + (i/rays)*angleSpread;
+    let dist = 0;
+    let step = 0.2;
+    while(dist<radius){
+      let tx = cx + Math.cos(angle)*dist;
+      let ty = cy + Math.sin(angle)*dist;
+      let mx = Math.floor(tx);
+      let my = Math.floor(ty);
+      if(mx<0||mx>=cols||my<0||my>=rows) break;
+      if(!visibleCells.some(c=>c.x===mx && c.y===my)) visibleCells.push({x:mx,y:my});
+      if(map[my][mx]===1) break;
+      dist+=step;
+    }
+  }
+}
+
+// Dessin entités visibles
+function drawEntities(){
+  ghosts.forEach(g=>{
+    if(lightOn || visibleCells.some(c=>c.x===g.x && c.y===g.y)){
+      ctx.fillText("👾",g.x*tile+8,g.y*tile+28);
+    }
+  });
+  for(let y=0;y<rows;y++){
+    for(let x=0;x<cols;x++){
+      if(map[y][x]===2 && (lightOn || visibleCells.some(c=>c.x===x && c.y===y))){
+        ctx.fillText("👨‍💻",x*tile+8,y*tile+28);
+      }
+      if(map[y][x]===3 && (lightOn || visibleCells.some(c=>c.x===x && c.y===y))){
+        ctx.fillText("💡",x*tile+8,y*tile+28);
+      }
+    }
+  }
+}
+
+// Dessin Pac-Man
+function drawPacman(){
+  ctx.beginPath();
+  ctx.arc(pacman.x*tile+tile/2,pacman.y*tile+tile/2,tile/2-2,0,Math.PI*2);
+  ctx.fillStyle="yellow";
+  ctx.fill();
+}
+
+// Dessin vies
+function drawLives(){
+  for(let i=0;i<lives;i++){
+    ctx.fillStyle="red";
+    ctx.beginPath();
+    ctx.arc(20+i*30,20,10,0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+// Lampe torche avec polygone diffus
+function drawFog(){
+  ctx.fillStyle="rgba(0,0,0,0.7)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  const cx = pacman.x*tile+tile/2;
+  const cy = pacman.y*tile+tile/2;
+  const rays = 60;
+  const radius = tile*6;
+  const angleSpread = Math.PI/3;
+  let startAngle=0;
+  if(pacman.facing==="up") startAngle=-Math.PI/2-angleSpread/2;
+  if(pacman.facing==="down") startAngle=Math.PI/2-angleSpread/2;
+  if(pacman.facing==="left") startAngle=Math.PI-angleSpread/2;
+  if(pacman.facing==="right") startAngle=0-angleSpread/2;
+
+  // Polygone lumière
+  let points = [{x:cx,y:cy}];
+  for(let i=0;i<=rays;i++){
+    let angle = startAngle+(i/rays)*angleSpread;
+    let dist = 0;
+    let step = 2;
+    while(dist<radius){
+      let tx = cx + Math.cos(angle)*dist;
+      let ty = cy + Math.sin(angle)*dist;
+      let mx = Math.floor(tx/tile);
+      let my = Math.floor(ty/tile);
+      if(mx>=0 && mx<cols && my>=0 && my<rows && map[my][mx]===1){ break; }
+      dist+=step;
+    }
+    points.push({x:cx+Math.cos(angle)*dist, y:cy+Math.sin(angle)*dist});
+  }
+
+  let grad = ctx.createRadialGradient(cx,cy,0,cx,cy,radius);
+  grad.addColorStop(0,"rgba(255,255,200,0.8)");
+  grad.addColorStop(1,"rgba(255,255,200,0.0)");
+  ctx.fillStyle = grad;
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for(let i=1;i<points.length;i++) ctx.lineTo(points[i].x, points[i].y);
+  ctx.closePath();
+  ctx.fill();
+}
+
+// Boucle principale
+function loop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawMap();
+  computeVisibility();
+  drawEntities();
+  drawPacman();
+  drawLives();
+  drawFog();
+  moveGhosts();
+  checkCollisions();
+
+  if(lightOn){
+    lightTimer--;
+    if(lightTimer<=0) lightOn=false;
+  }
+
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+</body>
+</html>

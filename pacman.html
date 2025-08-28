@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>MetaCore Pac-Man 3D</title>
+<style>
+body { margin:0; overflow:hidden; background:#111; font-family:sans-serif; }
+#lives {
+  position:absolute; top:10px; left:10px; display:flex; gap:5px; font-size:24px; z-index:100;
+}
+</style>
+</head>
+<body>
+<div id="lives">❤️❤️❤️</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+<script>
+
+// === SCENE / CAMERA / RENDERER ===
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.set(0,5,7);
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+document.body.appendChild(renderer.domElement);
+
+// === LUMIÈRES ===
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // lumière ambiante forte
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+directionalLight.position.set(10,20,10);
+directionalLight.castShadow = true;
+scene.add(directionalLight);
+
+// === LABYRINTHE SIMPLE ===
+const mazeData = [
+  "###########",
+  "#.........#",
+  "#.###.###.#",
+  "#...#.....#",
+  "###########"
+];
+
+const wallMaterial = new THREE.MeshPhongMaterial({color:0x5555ff});
+const floorMaterial = new THREE.MeshPhongMaterial({color:0x666666});
+const floorGeom = new THREE.PlaneGeometry(1,1);
+
+mazeData.forEach((row,y)=>{
+  [...row].forEach((cell,x)=>{
+    const posX = x-5, posZ = y-2;
+    // Sol
+    const floor = new THREE.Mesh(floorGeom,floorMaterial);
+    floor.rotation.x=-Math.PI/2;
+    floor.position.set(posX,0,posZ);
+    floor.receiveShadow = true;
+    scene.add(floor);
+    // Mur
+    if(cell=="#"){
+      const cubeGeom = new THREE.BoxGeometry(1,1,1);
+      const wall = new THREE.Mesh(cubeGeom,wallMaterial);
+      wall.position.set(posX,0.5,posZ);
+      wall.castShadow = true;
+      wall.receiveShadow = true;
+      scene.add(wall);
+    }
+  });
+});
+
+// === PAC-MAN ===
+const pacGeom = new THREE.SphereGeometry(0.4,32,32,0,Math.PI*1.5);
+const pacMat = new THREE.MeshPhongMaterial({color:0xffff00});
+const pacman = new THREE.Mesh(pacGeom,pacMat);
+pacman.position.set(1,0.4,1);
+pacman.castShadow = true;
+scene.add(pacman);
+
+// Lampe torche
+const spotlight = new THREE.SpotLight(0xffffff,2);
+spotlight.angle = Math.PI/6;
+spotlight.penumbra = 0.5;
+spotlight.castShadow = true;
+spotlight.position.set(0,0.5,0);
+pacman.add(spotlight);
+
+// === FANTÔMES ===
+const ghostMaterial = new THREE.MeshPhongMaterial({color:0xff0000});
+const ghosts = [];
+for(let i=0;i<2;i++){
+  const g = new THREE.Mesh(new THREE.SphereGeometry(0.3,16,16),ghostMaterial.clone());
+  g.position.set(8-i*2,0.3,1+i*2);
+  g.userData.dir = [Math.random()*2-1, Math.random()*2-1];
+  g.castShadow = true;
+  ghosts.push(g);
+  scene.add(g);
+}
+
+// === BONUS ===
+const bonusMaterial = new THREE.MeshPhongMaterial({color:0x00ff00});
+const bonuses = [];
+bonuses.push(new THREE.Mesh(new THREE.SphereGeometry(0.15,8,8),bonusMaterial.clone()));
+bonuses[0].position.set(3,0.15,1);
+bonuses[0].castShadow = true;
+scene.add(bonuses[0]);
+
+// === VARIABLES ===
+let keys = {};
+let lives = 3;
+
+// === CONTROLES ===
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+
+// === COLLISION SIMPLE MURS ===
+function checkCollision(pos){
+  const x = Math.round(pos.x+5);
+  const z = Math.round(pos.z+2);
+  if(x<0||x>=mazeData[0].length||z<0||z>=mazeData.length) return true;
+  return mazeData[z][x]=="#";
+}
+
+// === ANIMATION ===
+function animate(){
+  requestAnimationFrame(animate);
+
+  // PAC-MAN MOVEMENT
+  let speed = 0.05;
+  let moveX=0, moveZ=0;
+  if(keys["arrowup"]||keys["z"]) moveZ-=speed;
+  if(keys["arrowdown"]||keys["s"]) moveZ+=speed;
+  if(keys["arrowleft"]||keys["q"]) moveX-=speed;
+  if(keys["arrowright"]||keys["d"]) moveX+=speed;
+  
+  const newPos = pacman.position.clone();
+  newPos.x+=moveX; newPos.z+=moveZ;
+  if(!checkCollision(newPos)) pacman.position.copy(newPos);
+
+  // CAMERA
+  camera.position.x = pacman.position.x;
+  camera.position.z = pacman.position.z+7;
+  camera.lookAt(pacman.position.x,0,pacman.position.z);
+
+  // FANTÔMES
+  ghosts.forEach(g=>{
+    g.position.x+=g.userData.dir[0]*0.01;
+    g.position.z+=g.userData.dir[1]*0.01;
+    if(checkCollision(g.position)){ g.userData.dir[0]*=-1; g.userData.dir[1]*=-1; }
+    // COLLISION PACMAN
+    if(pacman.position.distanceTo(g.position)<0.5){
+      lives--;
+      document.getElementById("lives").innerText="❤️".repeat(lives);
+      pacman.position.set(1,0.4,1);
+      if(lives<=0){ alert("Game Over !"); lives=3; document.getElementById("lives").innerText="❤️❤️❤️"; }
+    }
+  });
+
+  // BONUS
+  bonuses.forEach(b=>{
+    const dist = pacman.position.distanceTo(b.position);
+    if(dist<0.4){
+      scene.remove(b);
+      bonuses.splice(bonuses.indexOf(b),1);
+    }
+  });
+
+  renderer.render(scene,camera);
+}
+animate();
+
+window.addEventListener('resize',()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+});
+
+</script>
+</body>
+</html>
