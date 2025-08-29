@@ -6,6 +6,9 @@
 <title>MetaCore - Accueil</title>
 <link rel="icon" href="iconetriangle.ico" type="image/x-icon">
 
+<!-- Supabase JS v2 -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+
 <style>
 :root {
   --bg-color: #111;
@@ -38,46 +41,58 @@ body {
 /* VIDEO DE FOND */
 #bgVideo {
   position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  z-index:-2;
+  z-index: -2;
   filter: blur(8px) brightness(0.85);
 }
 
+/* Overlay en dégradé */
 .background-overlay {
   position: fixed;
-  inset:0;
-  z-index:-1;
+  inset: 0;
+  z-index: -1;
   background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.4) 100%);
-  pointer-events:none;
+  pointer-events: none;
 }
 
-/* HEADER */
+/* Ombres sur texte et boutons */
+h1, h2, h3, p, .btn {
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
 header {
   padding: 2rem;
   text-align: center;
   position: relative;
-  transition: opacity 0.5s ease, transform 0.5s ease;
 }
-header img.logo { width:100px; pointer-events:none; user-drag:none; }
+header img.logo { width: 100px; pointer-events:none; user-drag:none; }
 
 .header-buttons {
   position: absolute;
-  top:20px; right:20px;
-  display:flex;
-  gap:10px;
-  align-items:center;
+  top: 20px;
+  right: 70px; /* laisser place au logo utilisateur */
+  display: flex;
+  gap: 10px;
 }
 
-.header-buttons img {
-  width:40px;
-  cursor:pointer;
+#userIcon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
 }
 
-/* STICKY HEADER */
 #stickyHeader {
-  position: fixed; top:-100px; left:0; right:0;
+  position: fixed;
+  top: -100px;
+  left:0;
+  right:0;
   background: rgba(0,0,0,0.6);
   backdrop-filter: blur(8px);
   display:flex;
@@ -89,8 +104,8 @@ header img.logo { width:100px; pointer-events:none; user-drag:none; }
   opacity:0;
 }
 #stickyHeader img { width:50px; pointer-events:none; user-drag:none; }
+#stickyHeader .btn { margin-left:10px; display:flex; align-items:center; justify-content:center; }
 
-/* BOUTONS */
 .btn {
   padding:12px 24px;
   border-radius:12px;
@@ -102,10 +117,11 @@ header img.logo { width:100px; pointer-events:none; user-drag:none; }
 }
 .btn-primary { background: var(--btn-primary); }
 
-/* MAIN CARDS */
-main { max-width:900px; margin:auto; padding:2rem; }
+main { max-width: 900px; margin:auto; padding:2rem; }
 .card {
-  display:flex; align-items:center; gap:1rem;
+  display:flex;
+  align-items:center;
+  gap:1rem;
   background: var(--card-bg);
   backdrop-filter: blur(10px);
   padding:1.5rem;
@@ -115,17 +131,18 @@ main { max-width:900px; margin:auto; padding:2rem; }
   overflow:hidden;
   cursor:pointer;
   text-decoration:none;
-  color: var(--text-color);
+  color:var(--text-color);
 }
 .card::before {
-  content:'';
+  content: '';
   position:absolute;
   top:var(--y,50%);
   left:var(--x,50%);
-  width:200%; height:200%;
+  width:200%;
+  height:200%;
   background: radial-gradient(circle 100px at center, rgba(77,255,255,0.15), transparent 80%);
-  transform: translate(-50%,-50%);
-  transition: top 0.1s,left 0.1s,opacity 0.3s;
+  transform: translate(-50%, -50%);
+  transition: top 0.1s, left 0.1s, opacity 0.3s;
   pointer-events:none;
   opacity:0;
 }
@@ -134,53 +151,40 @@ main { max-width:900px; margin:auto; padding:2rem; }
 .card h3, .card p { margin:0; }
 .card svg { width:40px; height:40px; fill: var(--icon-color); flex-shrink:0; }
 
-/* FOOTER */
-footer { margin-top:2rem; padding:2rem 0; text-align:center; }
+footer { margin-top:2rem; padding:2rem 0; color: var(--text-color); text-align:center; user-select:none; }
+footer a { color: var(--icon-color); text-decoration:none; transition: transform 0.2s ease; }
+footer a:hover { transform: scale(1.2); }
+
 .iban-container { display:flex; align-items:center; gap:5px; justify-content:center; flex-wrap:wrap; margin-top:1rem; user-select:text; }
-.iban-container input { border:none; background:transparent; color:var(--text-color); font-weight:bold; width:auto; max-width:250px; text-align:center; }
+.iban-container input { border:none; background: transparent; color: var(--text-color); font-weight:bold; width:auto; max-width:250px; text-align:center; }
 .copy-btn { padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer; border:none; background: var(--btn-primary); color:#fff; }
 
-/* LOGIN OVERLAY */
-#login-overlay {
-  position:fixed; inset:0;
-  background: rgba(0,0,0,0.8);
+/* Overlay connexion */
+#loginOverlay {
+  position: fixed;
+  bottom: -100%;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(10px);
+  z-index: 200;
   display:flex;
-  justify-content:center;
+  flex-direction:column;
   align-items:center;
-  opacity:0;
-  pointer-events:none;
-  transition: opacity 0.3s ease;
-  z-index:200;
-}
-#login-overlay.active {
-  opacity:1;
-  pointer-events:auto;
-}
-#login-box {
-  background: var(--bg-color);
+  justify-content:center;
+  transition: bottom 0.5s ease;
   padding:2rem;
-  border-radius:12px;
-  text-align:center;
-  max-width:350px;
-  width:90%;
+  color:#fff;
 }
-#login-box h2 { margin-top:0; }
-#login-box button {
-  margin:0.5rem 0; padding:10px 20px; border:none; border-radius:8px; cursor:pointer;
-  background: var(--btn-secondary); color:#fff; font-weight:bold;
-}
-#login-box .close-btn { position:absolute; top:10px; right:10px; cursor:pointer; font-size:1.2rem; }
-
-/* MEDIA */
-@media(max-width:600px){
-  #stickyHeader { flex-direction:row; }
-  .card { flex-direction:column; text-align:center; }
-  .header-buttons { gap:5px; }
-}
+#loginOverlay.active { bottom:0; }
+#loginOverlay button { margin:1rem; padding:0.8rem 2rem; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
+#closeOverlay { position:absolute; top:20px; right:20px; font-size:1.5rem; cursor:pointer; }
 </style>
 </head>
 <body>
 
+<!-- FOND VIDEO -->
 <video autoplay muted loop playsinline id="bgVideo">
   <source src="bg.webm" type="video/mp4">
 </video>
@@ -195,8 +199,8 @@ footer { margin-top:2rem; padding:2rem 0; text-align:center; }
   <div class="header-buttons">
     <a href="https://calendly.com/metacorerepair/30min" target="_blank" class="btn btn-primary">Réserver</a>
     <a href="tarifs.html" class="btn">Tarifs</a>
-    <img src="utilisateur.png" id="user-icon" alt="Utilisateur">
   </div>
+  <img src="utilisateur.png" id="userIcon" alt="Se connecter">
 </header>
 
 <div id="stickyHeader">
@@ -204,7 +208,6 @@ footer { margin-top:2rem; padding:2rem 0; text-align:center; }
   <div style="display:flex; align-items:center; gap:10px;">
     <a href="https://calendly.com/metacorerepair/30min" target="_blank" class="btn btn-primary">Réserver</a>
     <a href="tarifs.html" class="btn">Tarifs</a>
-    <img src="utilisateur.png" id="user-icon-sticky" alt="Utilisateur">
   </div>
 </div>
 
@@ -221,14 +224,23 @@ footer { margin-top:2rem; padding:2rem 0; text-align:center; }
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
       <path fill="currentColor" d="M0 93.7l183.6-25.3v168.9H0V93.7zm0 324.6l183.6 25.3V274.7H0v143.6zM204.3 65L448 32v205.2H204.3V65zm0 382.1L448 480V274.7H204.3V447.1z"/>
     </svg>
-    <div><h3>Installation OS 💾</h3><p>Installation Windows ou tout autre OS sur mesure 🖥️</p></div>
+    <div>
+      <h3>Installation OS 💾</h3>
+      <p>Installation Windows ou tout autre OS sur mesure 🖥️</p>
+    </div>
   </a>
 </main>
 
 <footer>
+  <div class="footer-ig">
+    <a href="https://instagram.com/metacore.fr" target="_blank"></a>
+  </div>
+  <div>© 2025 MetaCore</div>
+
   <div style="margin-top:1rem;">
     <a href="presentation.html" class="btn">Qui suis-je ?</a>
   </div>
+
   <div id="soutenir" style="margin-top:2rem; padding:1.5rem; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-radius:12px; max-width:700px; margin-left:auto; margin-right:auto; text-align:center; user-select:text;">
     <h2>💖 Soutenir MetaCore</h2>
     <p>Si tu veux soutenir notre travail et aider MetaCore à grandir, tu peux faire un don direct sur notre compte bancaire. Chaque contribution compte !</p>
@@ -237,64 +249,87 @@ footer { margin-top:2rem; padding:2rem 0; text-align:center; }
       <button class="copy-btn" onclick="copyIBAN()">Copier</button>
     </div>
   </div>
-  <div>© 2025 MetaCore</div>
 </footer>
 
-<!-- LOGIN OVERLAY -->
-<div id="login-overlay">
-  <div id="login-box">
-    <span class="close-btn" id="login-close">×</span>
-    <h2>Se connecter / S'inscrire</h2>
-    <button id="login-google">Google</button>
-    <button id="login-email">Email</button>
-  </div>
+<!-- Overlay connexion -->
+<div id="loginOverlay">
+  <div id="closeOverlay">✖</div>
+  <h2>Se connecter / S’inscrire</h2>
+  <button id="login-google" style="background:#4285F4;">Google</button>
+  <button id="login-email" style="background:#4CAF50;">Email</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
-// Supabase client
-const supabaseUrl = "https://slqadsmbippvturbxlgj.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNscWFkc21iaXBwdnR1cmJ4bGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MjIwOTEsImV4cCI6MjA3MTk5ODA5MX0.tK_rJFP7dpH0PBBkX5aEX-niVE0yNlJDOgUZpm7D2CA";
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+// Supabase
+const supabaseUrl = 'https://slqadsmbippvturbxlgj.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNscWFkc21iaXBwdnR1cmJ4bGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MjIwOTEsImV4cCI6MjA3MTk5ODA5MX0.tK_rJFP7dpH0PBBkX5aEX-niVE0yNlJDOgUZpm7D2CA';
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
 // Sticky header
 const sticky = document.getElementById('stickyHeader');
 const mainHeader = document.getElementById('mainHeader');
-window.addEventListener('scroll', ()=>{
+window.addEventListener('scroll', () => {
   let scroll = window.scrollY;
-  if(scroll>150){sticky.style.top='0'; sticky.style.opacity='1';} else {sticky.style.top='-100px'; sticky.style.opacity='0';}
-  if(scroll<150){mainHeader.style.opacity=1-scroll/150; mainHeader.style.transform=`translateY(-${scroll/3}px)`;} else {mainHeader.style.opacity=0; mainHeader.style.transform='translateY(-50px)';}
+  if(scroll > 150){
+    sticky.style.top = '0';
+    sticky.style.opacity = '1';
+  } else {
+    sticky.style.top = '-100px';
+    sticky.style.opacity = '0';
+  }
+  if(scroll < 150){
+    mainHeader.style.opacity = 1 - scroll/150;
+    mainHeader.style.transform = `translateY(-${scroll/3}px)`;
+  } else {
+    mainHeader.style.opacity = 0;
+    mainHeader.style.transform = 'translateY(-50px)';
+  }
 });
 
-// Card hover effect
-document.querySelectorAll('.card').forEach(card=>{
-  card.addEventListener('mousemove', e=>{
+// Effet hover sur les cartes
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('mousemove', e => {
     const rect = card.getBoundingClientRect();
-    card.style.setProperty('--x', (e.clientX - rect.left)+'px');
-    card.style.setProperty('--y', (e.clientY - rect.top)+'px');
+    card.style.setProperty('--x', (e.clientX - rect.left) + 'px');
+    card.style.setProperty('--y', (e.clientY - rect.top) + 'px');
   });
-  card.addEventListener('mouseleave', ()=>{
-    card.style.setProperty('--x','50%');
-    card.style.setProperty('--y','50%');
+  card.addEventListener('mouseleave', () => {
+    card.style.setProperty('--x', '50%');
+    card.style.setProperty('--y', '50%');
   });
 });
 
-// Copy IBAN
-function copyIBAN(){
-  const ibanInput=document.getElementById('iban');
+// Copier IBAN
+function copyIBAN() {
+  const ibanInput = document.getElementById('iban');
   ibanInput.select();
-  ibanInput.setSelectionRange(0,99999);
+  ibanInput.setSelectionRange(0, 99999);
   document.execCommand("copy");
   alert("IBAN copié !");
 }
 
-// Login overlay
-const userIcons = [document.getElementById('user-icon'), document.getElementById('user-icon-sticky')];
-const loginOverlay = document.getElementById('login-overlay');
-const loginClose = document.getElementById('login-close');
+// Gestion overlay login
+const userIcon = document.getElementById('userIcon');
+const loginOverlay = document.getElementById('loginOverlay');
+const closeOverlay = document.getElementById('closeOverlay');
 
-userIcons.forEach(icon=>icon.addEventListener('click', ()=>loginOverlay.classList.add('active')));
-loginClose.addEventListener('click', ()=>loginOverlay.classList.remove('active'));
+userIcon.addEventListener('click', () => loginOverlay.classList.add('active'));
+closeOverlay.addEventListener('click', () => loginOverlay.classList.remove('active'));
+
+// Login Supabase
+document.getElementById('login-google').addEventListener('click', async () => {
+  const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
+  if(error) alert(error.message);
+});
+
+document.getElementById('login-email').addEventListener('click', async () => {
+  const email = prompt('Entrez votre email');
+  if(email){
+    const { error } = await supabaseClient.auth.signInWithOtp({ email });
+    if(error) alert(error.message);
+    else alert('Email envoyé !');
+  }
+});
 </script>
 
 </body>

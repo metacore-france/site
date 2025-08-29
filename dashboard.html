@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MetaCore - Dashboard Admin</title>
+<link rel="icon" href="iconetriangle.ico" type="image/x-icon">
+
+<!-- Supabase JS v2 -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+
+<style>
+:root {
+  --bg-color: #111;
+  --text-color: #fff;
+  --card-bg: rgba(255,255,255,0.05);
+  --btn-primary: #ff4d4d;
+  --btn-secondary: #4d79ff;
+}
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+header {
+  padding: 1.5rem 2rem;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+}
+header h1 { margin:0; font-size:1.5rem; }
+.btn { padding:0.6rem 1.2rem; border:none; border-radius:8px; cursor:pointer; font-weight:bold; color:#fff; background: var(--btn-secondary); }
+.btn-primary { background: var(--btn-primary); }
+
+main { padding:2rem; max-width:1000px; margin:auto; }
+.card { background: var(--card-bg); padding:1.5rem; border-radius:12px; margin-bottom:1rem; backdrop-filter: blur(10px); }
+.card h2 { margin:0 0 0.5rem 0; }
+.card table { width:100%; border-collapse:collapse; }
+.card table th, .card table td { border:1px solid rgba(255,255,255,0.2); padding:0.5rem; text-align:left; }
+.card table th { background: rgba(255,255,255,0.1); }
+#loading { text-align:center; margin-top:2rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Dashboard Admin</h1>
+  <button class="btn btn-primary" id="logoutBtn">Déconnexion</button>
+</header>
+
+<main>
+  <div class="card" id="viewsCard">
+    <h2>Vues du site</h2>
+    <div id="viewsContent">Chargement...</div>
+  </div>
+
+  <div class="card" id="usersCard">
+    <h2>Utilisateurs inscrits</h2>
+    <div id="usersContent">Chargement...</div>
+  </div>
+
+  <button class="btn" id="refreshBtn">Rafraîchir les données</button>
+  <div id="loading"></div>
+</main>
+
+<script>
+// Supabase
+const supabaseUrl = 'https://slqadsmbippvturbxlgj.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNscWFkc21iaXBwdnR1cmJ4bGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MjIwOTEsImV4cCI6MjA3MTk5ODA5MX0.tK_rJFP7dpH0PBBkX5aEX-niVE0yNlJDOgUZpm7D2CA';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+async function checkAdmin() {
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if(error || !user) {
+    alert("Accès refusé. Veuillez vous connecter.");
+    window.location.href = "index.html";
+  }
+}
+
+async function fetchViews() {
+  const { data, error } = await supabase.from('views').select('*');
+  const container = document.getElementById('viewsContent');
+  if(error) { container.innerHTML = 'Erreur'; console.error(error); return; }
+  let html = '<table><tr><th>Page</th><th>Vues</th></tr>';
+  data.forEach(row => {
+    html += `<tr><td>${row.page}</td><td>${row.count}</td></tr>`;
+  });
+  html += '</table>';
+  container.innerHTML = html;
+}
+
+async function fetchUsers() {
+  const { data, error } = await supabase.from('users').select('*');
+  const container = document.getElementById('usersContent');
+  if(error) { container.innerHTML = 'Erreur'; console.error(error); return; }
+  let html = '<table><tr><th>Email</th><th>Date inscription</th></tr>';
+  data.forEach(u => {
+    html += `<tr><td>${u.email}</td><td>${new Date(u.created_at).toLocaleString()}</td></tr>`;
+  });
+  html += '</table>';
+  container.innerHTML = html;
+}
+
+document.getElementById('refreshBtn').addEventListener('click', () => {
+  document.getElementById('loading').innerText = 'Chargement...';
+  fetchViews();
+  fetchUsers();
+  document.getElementById('loading').innerText = '';
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await supabase.auth.signOut();
+  window.location.href = "index.html";
+});
+
+// Initialisation
+checkAdmin();
+fetchViews();
+fetchUsers();
+</script>
+
+</body>
+</html>
