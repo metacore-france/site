@@ -6,9 +6,6 @@
 <title>MetaCore - Accueil</title>
 <link rel="icon" href="iconetriangle.ico" type="image/x-icon">
 
-<!-- Supabase JS v2 -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-
 <style>
 :root {
   --bg-color: #111;
@@ -38,7 +35,7 @@ body {
   user-select: none;
 }
 
-/* VIDEO DE FOND */
+/* ==== VIDEO DE FOND ==== */
 #bgVideo {
   position: fixed;
   top: 0;
@@ -48,18 +45,23 @@ body {
   object-fit: cover;
   z-index: -2;
   filter: blur(8px) brightness(0.85);
+  transition: transform 0.3s ease-out;
 }
 
-/* Overlay en dégradé */
 .background-overlay {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.4) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.4) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(0,0,0,0.4) 100%
+  );
   pointer-events: none;
 }
 
-/* Ombres sur texte et boutons */
 h1, h2, h3, p, .btn {
   text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
@@ -68,26 +70,28 @@ header {
   padding: 2rem;
   text-align: center;
   position: relative;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
-header img.logo { width: 100px; pointer-events:none; user-drag:none; }
-
+header img.logo {
+  width: 100px;
+  pointer-events: none;
+  user-drag: none;
+  transition: transform 0.1s ease;
+}
 .header-buttons {
   position: absolute;
   top: 20px;
-  right: 70px; /* laisser place au logo utilisateur */
+  right: 20px;
   display: flex;
   gap: 10px;
+  align-items:center;
 }
-
 #userIcon {
-  position: absolute;
-  top: 20px;
-  right: 20px;
   width: 40px;
   height: 40px;
-  cursor: pointer;
+  cursor:pointer;
+  margin-left:10px;
 }
-
 #stickyHeader {
   position: fixed;
   top: -100px;
@@ -104,6 +108,7 @@ header img.logo { width: 100px; pointer-events:none; user-drag:none; }
   opacity:0;
 }
 #stickyHeader img { width:50px; pointer-events:none; user-drag:none; }
+#userIconSticky { width:35px; height:35px; cursor:pointer; margin-left:10px; }
 #stickyHeader .btn { margin-left:10px; display:flex; align-items:center; justify-content:center; }
 
 .btn {
@@ -154,32 +159,18 @@ main { max-width: 900px; margin:auto; padding:2rem; }
 footer { margin-top:2rem; padding:2rem 0; color: var(--text-color); text-align:center; user-select:none; }
 footer a { color: var(--icon-color); text-decoration:none; transition: transform 0.2s ease; }
 footer a:hover { transform: scale(1.2); }
-
 .iban-container { display:flex; align-items:center; gap:5px; justify-content:center; flex-wrap:wrap; margin-top:1rem; user-select:text; }
 .iban-container input { border:none; background: transparent; color: var(--text-color); font-weight:bold; width:auto; max-width:250px; text-align:center; }
 .copy-btn { padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer; border:none; background: var(--btn-primary); color:#fff; }
 
-/* Overlay connexion */
-#loginOverlay {
-  position: fixed;
-  bottom: -100%;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.95);
-  backdrop-filter: blur(10px);
-  z-index: 200;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  transition: bottom 0.5s ease;
-  padding:2rem;
-  color:#fff;
+.footer-ig { margin-bottom:1rem; }
+.footer-ig svg { width:48px; height:48px; }
+
+@media(max-width:600px){
+  #stickyHeader { flex-direction: row; }
+  .card { flex-direction: column; text-align: center; }
+  .header-buttons { display:none; }
 }
-#loginOverlay.active { bottom:0; }
-#loginOverlay button { margin:1rem; padding:0.8rem 2rem; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
-#closeOverlay { position:absolute; top:20px; right:20px; font-size:1.5rem; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -199,8 +190,8 @@ footer a:hover { transform: scale(1.2); }
   <div class="header-buttons">
     <a href="https://calendly.com/metacorerepair/30min" target="_blank" class="btn btn-primary">Réserver</a>
     <a href="tarifs.html" class="btn">Tarifs</a>
+    <img id="userIcon" src="utilisateur.png" alt="Utilisateur">
   </div>
-  <img src="utilisateur.png" id="userIcon" alt="Se connecter">
 </header>
 
 <div id="stickyHeader">
@@ -208,6 +199,7 @@ footer a:hover { transform: scale(1.2); }
   <div style="display:flex; align-items:center; gap:10px;">
     <a href="https://calendly.com/metacorerepair/30min" target="_blank" class="btn btn-primary">Réserver</a>
     <a href="tarifs.html" class="btn">Tarifs</a>
+    <img id="userIconSticky" src="utilisateur.png" alt="Utilisateur">
   </div>
 </div>
 
@@ -236,11 +228,9 @@ footer a:hover { transform: scale(1.2); }
     <a href="https://instagram.com/metacore.fr" target="_blank"></a>
   </div>
   <div>© 2025 MetaCore</div>
-
   <div style="margin-top:1rem;">
     <a href="presentation.html" class="btn">Qui suis-je ?</a>
   </div>
-
   <div id="soutenir" style="margin-top:2rem; padding:1.5rem; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-radius:12px; max-width:700px; margin-left:auto; margin-right:auto; text-align:center; user-select:text;">
     <h2>💖 Soutenir MetaCore</h2>
     <p>Si tu veux soutenir notre travail et aider MetaCore à grandir, tu peux faire un don direct sur notre compte bancaire. Chaque contribution compte !</p>
@@ -251,20 +241,23 @@ footer a:hover { transform: scale(1.2); }
   </div>
 </footer>
 
-<!-- Overlay connexion -->
-<div id="loginOverlay">
-  <div id="closeOverlay">✖</div>
-  <h2>Se connecter / S’inscrire</h2>
-  <button id="login-google" style="background:#4285F4;">Google</button>
-  <button id="login-email" style="background:#4CAF50;">Email</button>
+<!-- Overlay login/inscription -->
+<div id="loginOverlay" style="display:none; position:fixed; inset:0; z-index:200; backdrop-filter:blur(8px); background: rgba(0,0,0,0.7); align-items:center; justify-content:center;">
+  <div style="background: rgba(255,255,255,0.05); backdrop-filter:blur(10px); padding:2rem; border-radius:12px; max-width:350px; width:90%; position:relative; text-align:center; color:#fff;">
+    <span id="closeLogin" style="position:absolute; top:10px; right:10px; font-size:1.5rem; cursor:pointer;">&times;</span>
+    <h2>Se connecter / S'inscrire</h2>
+    <input type="email" id="loginEmail" placeholder="Email" style="width:90%; padding:0.5rem; margin-top:1rem; border-radius:8px; border:none; background:rgba(255,255,255,0.1); color:#fff;">
+    <input type="password" id="loginPassword" placeholder="Mot de passe" style="width:90%; padding:0.5rem; margin-top:0.5rem; border-radius:8px; border:none; background:rgba(255,255,255,0.1); color:#fff;">
+    <div style="margin-top:1rem;">
+      <button id="loginBtn" style="padding:0.7rem 1.5rem; border-radius:8px; border:none; background:#4d79ff; color:#fff; font-weight:bold; margin-right:5px; cursor:pointer;">Connexion</button>
+      <button id="signupBtn" style="padding:0.7rem 1.5rem; border-radius:8px; border:none; background:#ff4d4d; color:#fff; font-weight:bold; cursor:pointer;">S'inscrire</button>
+    </div>
+    <div id="loginMessage" style="margin-top:1rem; font-size:0.9rem; color:#ff6666;"></div>
+  </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 <script>
-// Supabase
-const supabaseUrl = 'https://slqadsmbippvturbxlgj.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNscWFkc21iaXBwdnR1cmJ4bGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MjIwOTEsImV4cCI6MjA3MTk5ODA5MX0.tK_rJFP7dpH0PBBkX5aEX-niVE0yNlJDOgUZpm7D2CA';
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-
 // Sticky header
 const sticky = document.getElementById('stickyHeader');
 const mainHeader = document.getElementById('mainHeader');
@@ -308,27 +301,37 @@ function copyIBAN() {
   alert("IBAN copié !");
 }
 
-// Gestion overlay login
-const userIcon = document.getElementById('userIcon');
+// Supabase login/signup
+const supabaseUrl = 'https://slqadsmbippvturbxlgj.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNscWFkc21iaXBwdnR1cmJ4bGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MjIwOTEsImV4cCI6MjA3MTk5ODA5MX0.tK_rJFP7dpH0PBBkX5aEX-niVE0yNlJDOgUZpm7D2CA';
+const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
+
+// Ouverture overlay
+const userIcons = [document.getElementById('userIcon'), document.getElementById('userIconSticky')];
 const loginOverlay = document.getElementById('loginOverlay');
-const closeOverlay = document.getElementById('closeOverlay');
+userIcons.forEach(icon => icon.addEventListener('click', () => loginOverlay.style.display='flex'));
 
-userIcon.addEventListener('click', () => loginOverlay.classList.add('active'));
-closeOverlay.addEventListener('click', () => loginOverlay.classList.remove('active'));
+// Fermeture overlay
+document.getElementById('closeLogin').addEventListener('click', () => loginOverlay.style.display='none');
 
-// Login Supabase
-document.getElementById('login-google').addEventListener('click', async () => {
-  const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
-  if(error) alert(error.message);
+// Connexion
+document.getElementById('loginBtn').addEventListener('click', async ()=>{
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const msg = document.getElementById('loginMessage');
+  if(error){ msg.style.color='#ff6666'; msg.textContent = error.message; }
+  else { msg.style.color='#4dffef'; msg.textContent = 'Connexion réussie !'; loginOverlay.style.display='none'; }
 });
 
-document.getElementById('login-email').addEventListener('click', async () => {
-  const email = prompt('Entrez votre email');
-  if(email){
-    const { error } = await supabaseClient.auth.signInWithOtp({ email });
-    if(error) alert(error.message);
-    else alert('Email envoyé !');
-  }
+// Inscription
+document.getElementById('signupBtn').addEventListener('click', async ()=>{
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  const msg = document.getElementById('loginMessage');
+  if(error){ msg.style.color='#ff6666'; msg.textContent = error.message; }
+  else { msg.style.color='#4dffef'; msg.textContent = 'Compte créé ! Vérifiez votre email.'; }
 });
 </script>
 
