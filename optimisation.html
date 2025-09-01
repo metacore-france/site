@@ -4,155 +4,179 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MetaCore - Optimisation</title>
-<link rel="icon" href="iconetriangle.ico" type="image/x-icon">
+<link rel="icon" href="images/iconetriangle.ico" type="image/x-icon">
+<link rel="stylesheet" href="css/style.css">
 
 <style>
-  :root {
-    --bg-color: #111;
-    --text-color: #fff;
-    --card-bg: rgba(255,255,255,0.05);
-    --icon-color: #fff;
-    --btn-primary: #ff4d4d;
-    --btn-secondary: #4d79ff;
-  }
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg-color: #f5f5f5;
-      --text-color: #111;
-      --card-bg: rgba(0,0,0,0.05);
-      --icon-color: #111;
-      --btn-primary: #ff4d4d;
-      --btn-secondary: #4d79ff;
-    }
-  }
+  :root {
+    --bg-color: #111;
+    --text-color: #fff;
+    --card-bg: rgba(255,255,255,0.05);
+    --icon-color: #fff;
+    --btn-primary: #ff4d4d;
+    --btn-secondary: #4d79ff;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg-color: #f5f5f5;
+      --text-color: #111;
+      --card-bg: rgba(0,0,0,0.05);
+      --icon-color: #111;
+      --btn-primary: #ff4d4d;
+      --btn-secondary: #4d79ff;
+    }
+  }
+  body { margin:0; font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
 
-  body { margin:0; font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
-  .background { position: fixed; inset: 0; z-index: -1; background: linear-gradient(45deg, #ff4d4d, #4dffef, #4d4dff, #ff4dff); background-size: 600% 600%; filter: blur(120px); animation: moveBG 60s linear infinite; }
-  @keyframes moveBG { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
-
-  header { padding: 2rem; text-align: center; position: relative; transition: opacity 0.5s ease, transform 0.5s ease; }
-  header img.logo { width: 100px; transition: width 0.3s ease; }
-
-  #stickyHeader { position: fixed; top:-100px; left:0; right:0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display:flex; align-items:center; justify-content: space-between; padding:0.5rem 2rem; transition: top 0.3s ease, opacity 0.3s ease; z-index: 100; opacity:0; }
-  #stickyHeader img { width:50px; transition: width 0.3s ease; }
-  .btn { padding: 8px; border-radius: 50%; font-weight: bold; text-decoration:none; color:white; position:relative; cursor:pointer; display:flex; align-items:center; justify-content:center; background: transparent; border:none; font-size:1.2rem; transition: transform 0.2s; }
-  .btn:hover { transform: scale(1.2); }
-
-  main { max-width: 900px; margin:auto; padding:2rem; }
-  .card { display:flex; align-items:center; gap:1rem; background: var(--card-bg); backdrop-filter: blur(10px); padding:1.5rem; border-radius:1rem; margin:1rem 0; position: relative; overflow:hidden; cursor:pointer; text-decoration:none; color:var(--text-color); }
-  .card::before { content: ''; position:absolute; top:var(--y,50%); left:var(--x,50%); width:200%; height:200%; background: radial-gradient(circle 100px at center, rgba(77,255,255,0.15), transparent 80%); transform: translate(-50%, -50%); transition: top 0.1s, left 0.1s, opacity 0.3s; pointer-events:none; opacity:0; }
-  .card:hover::before { opacity:1; }
-  .card:hover { transform: translateY(-5px); box-shadow:0 15px 30px rgba(0,255,255,0.2); }
-  .card h3, .card p { margin:0; }
-  .card svg { width:40px; height:40px; fill: var(--icon-color); flex-shrink:0; }
-
-  footer { margin-top:2rem; padding:2rem 0; color: var(--text-color); text-align:center; }
-  footer a { color: var(--icon-color); text-decoration:none; transition: transform 0.2s ease; }
-  footer a:hover { transform: scale(1.2); }
-
-  @media(max-width:600px){ 
-    #stickyHeader { flex-direction: row; } 
-    .card { flex-direction: column; text-align: center; } 
-  }
+  /* FOND VIDEO */
+  #bgVideo {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    filter: blur(8px) brightness(0.85);
+  }
+  .background-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent 30%, transparent 70%, rgba(0, 0, 0, 0.4));
+    pointer-events: none;
+  }
+  header { padding: 2rem; text-align: center; position: relative; transition: opacity 0.5s ease, transform 0.5s ease; }
+  header img.logo { width: 100px; transition: width 0.3s ease; }
+  #stickyHeader { position: fixed; top:-100px; left:0; right:0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display:flex; align-items:center; justify-content: space-between; padding:0.5rem 2rem; transition: top 0.3s ease, opacity 0.3s ease; z-index: 100; opacity:0; }
+  #stickyHeader img { width:50px; transition: width 0.3s ease; }
+  .btn { padding: 8px; border-radius: 50%; font-weight: bold; text-decoration:none; color:white; position:relative; cursor:pointer; display:flex; align-items:center; justify-content:center; background: transparent; border:none; font-size:1.2rem; transition: transform 0.2s; }
+  .btn:hover { transform: scale(1.2); }
+  main { max-width: 900px; margin:auto; padding:2rem; }
+  .card { display:flex; align-items:center; gap:1rem; background: var(--card-bg); backdrop-filter: blur(10px); padding:1.5rem; border-radius:1rem; margin:1rem 0; position: relative; overflow:hidden; cursor:pointer; text-decoration:none; color:var(--text-color); }
+  .card::before { content: ''; position:absolute; top:var(--y,50%); left:var(--x,50%); width:200%; height:200%; background: radial-gradient(circle 100px at center, rgba(77,255,255,0.15), transparent 80%); transform: translate(-50%, -50%); transition: top 0.1s, left 0.1s, opacity 0.3s; pointer-events:none; opacity:0; }
+  .card:hover::before { opacity:1; }
+  .card:hover { transform: translateY(-5px); box-shadow:0 15px 30px rgba(0,255,255,0.2); }
+  .card h3, .card p { margin:0; }
+  .card svg { width:40px; height:40px; fill: var(--icon-color); flex-shrink:0; }
+  footer { margin-top:2rem; padding:2rem 0; color: var(--text-color); text-align:center; }
+  footer a { color: var(--icon-color); text-decoration:none; transition: transform 0.2s ease; }
+  footer a:hover { transform: scale(1.2); }
+  @media(max-width:600px){ 
+    #stickyHeader { flex-direction: row; } 
+    .card { flex-direction: column; text-align: center; } 
+  }
+  .sub-card { padding: 1rem 1.5rem; background: rgba(255,255,255,0.03); border-left: 3px solid var(--btn-secondary); border-radius: 8px; margin-top: 1rem; }
 </style>
 </head>
 <body>
 
-<div class="background"></div>
+<video autoplay muted loop playsinline id="bgVideo">
+  <source src="videos/bg.webm" type="video/mp4">
+</video>
+<div class="background-overlay"></div>
 
 <header id="mainHeader">
-  <img src="LogoTriangle.png" alt="Logo MetaCore" class="logo">
-  <div class="header-title">
-    <h1>Votre PC rame comme un escargot ?</h1>
-    <p>On est là pour le transformer en bolide 🏎️💻</p>
-  </div>
+  <img src="images/LogoTriangle.png" alt="Logo MetaCore" class="logo">
+  <div class="header-title">
+    <h1>Votre PC rame ? On lui donne un coup de fouet !</h1>
+    <p>On est là pour le transformer en bolide 🏎️💻</p>
+  </div>
 </header>
 
 <div id="stickyHeader">
-  <img src="LogoTriangle.png" alt="Logo MetaCore">
-  <div style="display:flex; align-items:center; gap:10px;">
-    <a href="index.html" class="btn">🏠</a>
-    <button class="btn" onclick="window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'});">💰</button>
-  </div>
+  <img src="images/LogoTriangle.png" alt="Logo MetaCore">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <a href="index.html" class="btn">🏠</a>
+    <a href="tarifs.html" class="btn">💰</a>
+  </div>
 </div>
 
 <main>
-  <section>
-    <h2>Qu'est-ce qui freine votre PC ?</h2>
-    <p>Lenteur, bugs, programmes qui plantent, ou juste ce sentiment que Windows n’aime pas votre café… On s’en occupe !</p>
-  </section>
+  <section>
+    <h2>Pourquoi votre PC est-il lent ?</h2>
+    <p>Plusieurs facteurs peuvent ralentir un ordinateur. En identifiant la cause, on peut appliquer la solution la plus efficace.</p>
+    <div class="sub-card">
+      <p><strong>Disque dur saturé :</strong> trop de fichiers, trop de programmes, un espace de stockage qui ne respire plus.</p>
+    </div>
+    <div class="sub-card">
+      <p><strong>Programmes au démarrage :</strong> une multitude d'applications se lancent en même temps que Windows, ce qui allonge le temps de démarrage.</p>
+    </div>
+    <div class="sub-card">
+      <p><strong>Fragmentation des fichiers :</strong> les données sont dispersées sur le disque dur, rendant leur accès plus lent.</p>
+    </div>
+    <div class="sub-card">
+      <p><strong>Virus et malwares :</strong> une infection peut monopoliser vos ressources système à votre insu.</p>
+    </div>
+  </section>
 
-  <section>
-    <h2>Nos boosts magiques ⚡</h2>
-    <div class="card">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 22l20-10L2 2v7l13 3-13 3v7z"/></svg>
-      <div>
-        <h3>Optimisation système</h3>
-        <p>On nettoie les fichiers inutiles, optimise les paramètres et fait respirer votre PC.</p>
-      </div>
-    </div>
-    <div class="card">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M2 18h20v2H2z"/></svg>
-      <div>
-        <h3>Boost démarrage</h3>
-        <p>Fini l’attente interminable au lancement, votre PC démarre en un éclair !</p>
-      </div>
-    </div>
-    <div class="card">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5z"/></svg>
-      <div>
-        <h3>Gaming & performance</h3>
-        <p>Paramètres ajustés, FPS améliorés, et tout ça sans sacrifier votre café ☕💨</p>
-      </div>
-    </div>
-  </section>
+  ---
 
-  <section>
-    <h2>Pourquoi nous choisir ?</h2>
-    <p>Parce qu’on optimise avec passion, un soupçon d’humour et zéro prise de tête.</p>
-  </section>
+  <section>
+    <h2>Nos solutions d'optimisation</h2>
+    <p>Chaque problème a une solution. Nous utilisons des méthodes éprouvées pour redonner une seconde vie à votre machine.</p>
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M495.2 73.8l-54.8-54.8a32 32 0 00-45.3 0L241.2 173.9l46.2 46.2 103.8-103.8 54.8 54.8a32 32 0 0045.3 0L495.2 119a32 32 0 000-45.2zM157.3 221.7L315.8 63.2 241.2 173.9 83.7 332.3l46.2 46.2 27.4-27.4zm-73.6 154.5l-42.5 42.5a32 32 0 000 45.3l54.8 54.8a32 32 0 0045.3 0L451.2 284.4l-46.2-46.2-27.4 27.4L137 421l-53.3-53.2zM218.4 200.7l-46.2 46.2 27.4 27.4L245.8 228.1l-27.4-27.4z"/></svg>
+      <div>
+        <h3>Nettoyage du système</h3>
+        <p>Suppression des fichiers inutiles, nettoyage du cache et des entrées de registre pour libérer de l'espace disque et améliorer la réactivité.</p>
+      </div>
+    </div>
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 96c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zM320 208c-88.4 0-160-71.6-160-160S231.6 0 320 0s160 71.6 160 160-71.6 160-160 160zm-30 240a16 16 0 00-11.3 4.7L38.7 384.7a16 16 0 00-22.6 0L4.7 400a16 16 0 000 22.6L169 510.3a16 16 0 0022.6 0l58.4-58.4a16 16 0 000-22.6L229.4 430.7a16 16 0 00-11.4-4.7z"/></svg>
+      <div>
+        <h3>Optimisation du démarrage</h3>
+        <p>Nous identifions les programmes qui ralentissent le démarrage de votre système et les configurons pour qu'ils ne se lancent que lorsque vous en avez besoin.</p>
+      </div>
+    </div>
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48c-112.9 0-204.8 91.9-204.8 204.8S143.1 457.6 256 457.6 460.8 365.7 460.8 252.8 368.9 48 256 48zm0 368c-89.9 0-163.2-73.3-163.2-163.2s73.3-163.2 163.2-163.2 163.2 73.3 163.2 163.2-73.3 163.2-163.2 163.2zM256 160a16 16 0 00-16 16v160a16 16 0 0032 0V176a16 16 0 00-16-16z"/></svg>
+      <div>
+        <h3>Réglages de performance</h3>
+        <p>Ajustement des paramètres du système d'exploitation et du matériel pour maximiser la réactivité et les performances en jeu comme en utilisation quotidienne.</p>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
-  <div>© 2025 MetaCore</div>
+  <div>© 2025 MetaCore</div>
 </footer>
 
 <script>
-  const sticky = document.getElementById('stickyHeader');
-  const mainHeader = document.getElementById('mainHeader');
+  const sticky = document.getElementById('stickyHeader');
+  const mainHeader = document.getElementById('mainHeader');
 
-  window.addEventListener('scroll', () => {
-    let scroll = window.scrollY;
-    if(scroll > 150){
-      sticky.style.top = '0';
-      sticky.style.opacity = '1';
-    } else {
-      sticky.style.top = '-100px';
-      sticky.style.opacity = '0';
-    }
+  window.addEventListener('scroll', () => {
+    let scroll = window.scrollY;
+    if(scroll > 150){
+      sticky.style.top = '0';
+      sticky.style.opacity = '1';
+    } else {
+      sticky.style.top = '-100px';
+      sticky.style.opacity = '0';
+    }
 
-    if(scroll < 150){
-      mainHeader.style.opacity = 1 - scroll/150;
-      mainHeader.style.transform = `translateY(-${scroll/3}px)`;
-    } else {
-      mainHeader.style.opacity = 0;
-      mainHeader.style.transform = 'translateY(-50px)';
-    }
-  });
+    if(scroll < 150){
+      mainHeader.style.opacity = 1 - scroll/150;
+      mainHeader.style.transform = `translateY(-${scroll/3}px)`;
+    } else {
+      mainHeader.style.opacity = 0;
+      mainHeader.style.transform = 'translateY(-50px)';
+    }
+  });
 
-  document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      card.style.setProperty('--x', (e.clientX - rect.left) + 'px');
-      card.style.setProperty('--y', (e.clientY - rect.top) + 'px');
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.setProperty('--x', '50%');
-      card.style.setProperty('--y', '50%');
-    });
-  });
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--x', (e.clientX - rect.left) + 'px');
+      card.style.setProperty('--y', (e.clientY - rect.top) + 'px');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--x', '50%');
+      card.style.setProperty('--y', '50%');
+    });
+  });
 </script>
 
 </body>
 </html>
-

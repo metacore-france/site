@@ -1,339 +1,120 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MetaCore - Accueil</title>
-<link rel="icon" href="iconetriangle.ico" type="image/x-icon">
-
-<style>
-:root {
-  --bg-color: #111;
-  --text-color: #fff;
-  --card-bg: rgba(255,255,255,0.05);
-  --icon-color: #fff;
-  --btn-primary: #ff4d4d;
-  --btn-secondary: #4d79ff;
-}
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-color: #f5f5f5;
-    --text-color: #111;
-    --card-bg: rgba(0,0,0,0.05);
-    --icon-color: #111;
-    --btn-primary: #ff4d4d;
-    --btn-secondary: #4d79ff;
-  }
-}
-
-body {
-  margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background: var(--bg-color);
-  color: var(--text-color);
-  overflow-x: hidden;
-  user-select: none;
-}
-
-/* ==== VIDEO DE FOND ==== */
-#bgVideo {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
-  filter: blur(8px) brightness(0.85);
-  transition: transform 0.3s ease-out;
-}
-
-.background-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.4) 0%,
-    transparent 30%,
-    transparent 70%,
-    rgba(0,0,0,0.4) 100%
-  );
-  pointer-events: none;
-}
-
-h1, h2, h3, p, .btn {
-  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-}
-
-header {
-  padding: 2rem;
-  text-align: center;
-  position: relative;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-header img.logo {
-  width: 100px;
-  pointer-events: none;
-  user-drag: none;
-  transition: transform 0.1s ease;
-}
-.header-buttons {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 10px;
-  align-items:center;
-}
-#userIcon {
-  width: 40px;
-  height: 40px;
-  cursor:pointer;
-  margin-left:10px;
-}
-#stickyHeader {
-  position: fixed;
-  top: -100px;
-  left:0;
-  right:0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(8px);
-  display:flex;
-  align-items:center;
-  justify-content: space-between;
-  padding:0.5rem 2rem;
-  transition: top 0.3s ease, opacity 0.3s ease;
-  z-index:100;
-  opacity:0;
-}
-#stickyHeader img { width:50px; pointer-events:none; user-drag:none; }
-#userIconSticky { width:35px; height:35px; cursor:pointer; margin-left:10px; }
-#stickyHeader .btn { margin-left:10px; display:flex; align-items:center; justify-content:center; }
-
-.btn {
-  padding:12px 24px;
-  border-radius:12px;
-  font-weight:bold;
-  text-decoration:none;
-  color:white;
-  background: var(--btn-secondary);
-  cursor:pointer;
-}
-.btn-primary { background: var(--btn-primary); }
-
-main { max-width: 900px; margin:auto; padding:2rem; }
-.card {
-  display:flex;
-  align-items:center;
-  gap:1rem;
-  background: var(--card-bg);
-  backdrop-filter: blur(10px);
-  padding:1.5rem;
-  border-radius:1rem;
-  margin:1rem 0;
-  position: relative;
-  overflow:hidden;
-  cursor:pointer;
-  text-decoration:none;
-  color:var(--text-color);
-}
-.card::before {
-  content: '';
-  position:absolute;
-  top:var(--y,50%);
-  left:var(--x,50%);
-  width:200%;
-  height:200%;
-  background: radial-gradient(circle 100px at center, rgba(77,255,255,0.15), transparent 80%);
-  transform: translate(-50%, -50%);
-  transition: top 0.1s, left 0.1s, opacity 0.3s;
-  pointer-events:none;
-  opacity:0;
-}
-.card:hover::before { opacity:1; }
-.card:hover { transform: translateY(-5px); box-shadow:0 15px 30px rgba(0,255,255,0.2); }
-.card h3, .card p { margin:0; }
-.card svg { width:40px; height:40px; fill: var(--icon-color); flex-shrink:0; }
-
-footer { margin-top:2rem; padding:2rem 0; color: var(--text-color); text-align:center; user-select:none; }
-footer a { color: var(--icon-color); text-decoration:none; transition: transform 0.2s ease; }
-footer a:hover { transform: scale(1.2); }
-.iban-container { display:flex; align-items:center; gap:5px; justify-content:center; flex-wrap:wrap; margin-top:1rem; user-select:text; }
-.iban-container input { border:none; background: transparent; color: var(--text-color); font-weight:bold; width:auto; max-width:250px; text-align:center; }
-.copy-btn { padding:4px 8px; border-radius:6px; font-size:0.8rem; cursor:pointer; border:none; background: var(--btn-primary); color:#fff; }
-
-.footer-ig { margin-bottom:1rem; }
-.footer-ig svg { width:48px; height:48px; }
-
-@media(max-width:600px){
-  #stickyHeader { flex-direction: row; }
-  .card { flex-direction: column; text-align: center; }
-  .header-buttons { display:none; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaCore - Accueil</title>
+    <link rel="icon" href="images/iconetriangle.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- FOND VIDEO -->
-<video autoplay muted loop playsinline id="bgVideo">
-  <source src="bg.webm" type="video/mp4">
-</video>
-<div class="background-overlay"></div>
+    <video autoplay muted loop playsinline id="bgVideo">
+        <source src="videos/bg.webm" type="video/mp4">
+    </video>
+    <div class="background-overlay"></div>
 
-<header id="mainHeader">
-  <img src="LogoTriangle.png" alt="Logo MetaCore" class="logo">
-  <div class="header-title">
-    <h1>Bienvenue chez MetaCore</h1>
-    <p>Le service de dépannage et optimisation informatique</p>
-  </div>
-  <div class="header-buttons">
-    <a href="https://calendly.com/metacorerepair/30min" target="_blank" class="btn btn-primary">Réserver</a>
-    <a href="tarifs.html" class="btn">Tarifs</a>
-    <img id="userIcon" src="utilisateur.png" alt="Utilisateur">
-  </div>
-</header>
+    <header id="mainHeader">
+        <img src="images/LogoTriangle.png" alt="Logo MetaCore" class="logo">
+        <div class="header-title">
+            <h1>Bienvenue chez MetaCore</h1>
+            <p>Le service de dépannage et optimisation informatique</p>
+        </div>
+        <div class="header-buttons">
+            <a href="https://calendly.com/metacorerepair/30min" target="_blank" class="btn btn-primary">Réserver</a>
+            <a href="tarifs.html" class="btn">Tarifs</a>
+            <a href="contact.html" class="btn">Contact</a>
+            <img id="userIcon" src="images/utilisateur.png" alt="Utilisateur">
+        </div>
+    </header>
 
-<div id="stickyHeader">
-  <img src="LogoTriangle.png" alt="Logo MetaCore">
-  <div style="display:flex; align-items:center; gap:10px;">
-    <a href="https://calendly.com/metacorerepair/30min" target="_blank" class="btn btn-primary">Réserver</a>
-    <a href="tarifs.html" class="btn">Tarifs</a>
-    <img id="userIconSticky" src="utilisateur.png" alt="Utilisateur">
-  </div>
-</div>
-
-<main>
-  <a href="depannage.html" class="card">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M2 18h20v2H2z"/></svg>
-    <div><h3>Dépannage 🛠️</h3><p>Votre ordinateur ne s'allume plus ? Problèmes et bugs résolus rapidement 💻</p></div>
-  </a>
-  <a href="optimisation.html" class="card">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 22l20-10L2 2v7l13 3-13 3v7z"/></svg>
-    <div><h3>Optimisation 🚀</h3><p>Votre PC lent ou pas optimal pour le gaming ? On booste ses performances ⚡</p></div>
-  </a>
-  <a href="installation-os.html" class="card">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-      <path fill="currentColor" d="M0 93.7l183.6-25.3v168.9H0V93.7zm0 324.6l183.6 25.3V274.7H0v143.6zM204.3 65L448 32v205.2H204.3V65zm0 382.1L448 480V274.7H204.3V447.1z"/>
-    </svg>
-    <div>
-      <h3>Installation OS 💾</h3>
-      <p>Installation Windows ou tout autre OS sur mesure 🖥️</p>
+    <div id="stickyHeader">
+        <img src="images/LogoTriangle.png" alt="Logo MetaCore">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <a href="https://calendly.com/metacorerepair/30min" target="_blank" class="btn btn-primary">Réserver</a>
+            <a href="tarifs.html" class="btn">Tarifs</a>
+            <a href="contact.html" class="btn">Contact</a>
+            <img id="userIconSticky" src="utilisateur.png" alt="Utilisateur">
+        </div>
     </div>
-  </a>
-</main>
 
-<footer>
-  <div class="footer-ig">
-    <a href="https://instagram.com/metacore.fr" target="_blank"></a>
-  </div>
-  <div>© 2025 MetaCore</div>
-  <div style="margin-top:1rem;">
-    <a href="presentation.html" class="btn">Qui suis-je ?</a>
-  </div>
-  <div id="soutenir" style="margin-top:2rem; padding:1.5rem; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-radius:12px; max-width:700px; margin-left:auto; margin-right:auto; text-align:center; user-select:text;">
-    <h2>💖 Soutenir MetaCore</h2>
-    <p>Si tu veux soutenir notre travail et aider MetaCore à grandir, tu peux faire un don direct sur notre compte bancaire. Chaque contribution compte !</p>
-    <div class="iban-container">
-      <input type="text" id="iban" value="FR76 2823 3000 0176 9510 0980 019" readonly>
-      <button class="copy-btn" onclick="copyIBAN()">Copier</button>
+    <main>
+        <a href="depannage.html" class="card">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M2 18h20v2H2z"/></svg>
+            <div><h3>Dépannage 🛠️</h3><p>Votre ordinateur ne s'allume plus ? Problèmes et bugs résolus rapidement 💻</p></div>
+        </a>
+        <a href="optimisation.html" class="card">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 22l20-10L2 2v7l13 3-13 3v7z"/></svg>
+            <div><h3>Optimisation 🚀</h3><p>Votre PC lent ou pas optimal pour le gaming ? On booste ses performances ⚡</p></div>
+        </a>
+        <a href="installation-os.html" class="card">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <path fill="currentColor" d="M0 93.7l183.6-25.3v168.9H0V93.7zm0 324.6l183.6 25.3V274.7H0v143.6zM204.3 65L448 32v205.2H204.3V65zm0 382.1L448 480V274.7H204.3V447.1z"/>
+            </svg>
+            <div>
+                <h3>Installation OS 💾</h3>
+                <p>Installation Windows ou tout autre OS sur mesure 🖥️</p>
+            </div>
+        </a>
+    </main>
+
+    <footer>
+        <div class="footer-ig">
+            <a href="https://instagram.com/metacore.fr" target="_blank"></a>
+        </div>
+        <div>© 2025 MetaCore</div>
+        <div style="margin-top:1rem;">
+            <a href="presentation.html" class="btn">Qui suis-je ?</a>
+        </div>
+        <button id="soutenir-btn" class="btn btn-soutien-transparent" style="margin-top:2rem;">Soutenir MetaCore</button>
+    </footer>
+
+    <div id="loginOverlay">
+        <div class="login-box">
+            <button id="closeLogin" class="close">&times;</button>
+            <h2>Se connecter / S'inscrire</h2>
+            <input type="email" id="loginEmail" placeholder="Email">
+            <input type="password" id="loginPassword" placeholder="Mot de passe">
+            <div class="login-actions">
+                <button id="loginBtn" class="btn btn-secondary">Connexion</button>
+                <button id="signupBtn" class="btn btn-primary">S'inscrire</button>
+            </div>
+            <div id="loginMessage" class="login-message"></div>
+        </div>
     </div>
-  </div>
-</footer>
 
-<!-- Overlay login/inscription -->
-<div id="loginOverlay" style="display:none; position:fixed; inset:0; z-index:200; backdrop-filter:blur(8px); background: rgba(0,0,0,0.7); align-items:center; justify-content:center;">
-  <div style="background: rgba(255,255,255,0.05); backdrop-filter:blur(10px); padding:2rem; border-radius:12px; max-width:350px; width:90%; position:relative; text-align:center; color:#fff;">
-    <span id="closeLogin" style="position:absolute; top:10px; right:10px; font-size:1.5rem; cursor:pointer;">&times;</span>
-    <h2>Se connecter / S'inscrire</h2>
-    <input type="email" id="loginEmail" placeholder="Email" style="width:90%; padding:0.5rem; margin-top:1rem; border-radius:8px; border:none; background:rgba(255,255,255,0.1); color:#fff;">
-    <input type="password" id="loginPassword" placeholder="Mot de passe" style="width:90%; padding:0.5rem; margin-top:0.5rem; border-radius:8px; border:none; background:rgba(255,255,255,0.1); color:#fff;">
-    <div style="margin-top:1rem;">
-      <button id="loginBtn" style="padding:0.7rem 1.5rem; border-radius:8px; border:none; background:#4d79ff; color:#fff; font-weight:bold; margin-right:5px; cursor:pointer;">Connexion</button>
-      <button id="signupBtn" style="padding:0.7rem 1.5rem; border-radius:8px; border:none; background:#ff4d4d; color:#fff; font-weight:bold; cursor:pointer;">S'inscrire</button>
+    <div id="donationOverlay">
+        <div class="donation-box">
+            <button id="closeDonation" class="close">&times;</button>
+            <h2 id="donationTitle">💖 Soutenir MetaCore</h2>
+            
+            <div id="donation-step-1">
+                <p>Merci pour votre soutien !</p>
+                <div class="donation-options">
+                    <button class="amount-btn selected" data-amount="5">5 €</button>
+                    <button class="amount-btn" data-amount="10">10 €</button>
+                    <button class="amount-btn" data-amount="20">20 €</button>
+                    <button class="amount-btn" data-amount="50">50 €</button>
+                </div>
+                <input type="number" id="donationAmount" placeholder="Montant personnalisé" value="5">
+                <input type="text" id="donationMessage" placeholder="Votre message (facultatif)">
+                <button id="continue-btn" class="btn btn-primary donate-btn">Continuer</button>
+            </div>
+
+            <div id="donation-step-2" style="display:none;">
+                <p>Pour faire un don, utilisez le virement bancaire. C'est sans commissions !</p>
+                <img id="qrCode" src="" alt="QR Code IBAN" style="width:150px;height:150px;margin:1rem auto;">
+                <div class="iban-container">
+                    <input type="text" id="iban" value="FR76 2823 3000 0176 9510 0980 019" readonly>
+                    <button class="copy-btn">Copier</button>
+                </div>
+                <p class="iban-note">N'oubliez pas d'indiquer le montant et votre message en référence du virement.</p>
+                <button id="back-btn" class="btn donate-btn">Retour</button>
+            </div>
+        </div>
     </div>
-    <div id="loginMessage" style="margin-top:1rem; font-size:0.9rem; color:#ff6666;"></div>
-  </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-<script>
-// Sticky header
-const sticky = document.getElementById('stickyHeader');
-const mainHeader = document.getElementById('mainHeader');
-window.addEventListener('scroll', () => {
-  let scroll = window.scrollY;
-  if(scroll > 150){
-    sticky.style.top = '0';
-    sticky.style.opacity = '1';
-  } else {
-    sticky.style.top = '-100px';
-    sticky.style.opacity = '0';
-  }
-  if(scroll < 150){
-    mainHeader.style.opacity = 1 - scroll/150;
-    mainHeader.style.transform = `translateY(-${scroll/3}px)`;
-  } else {
-    mainHeader.style.opacity = 0;
-    mainHeader.style.transform = 'translateY(-50px)';
-  }
-});
-
-// Effet hover sur les cartes
-document.querySelectorAll('.card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    card.style.setProperty('--x', (e.clientX - rect.left) + 'px');
-    card.style.setProperty('--y', (e.clientY - rect.top) + 'px');
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.setProperty('--x', '50%');
-    card.style.setProperty('--y', '50%');
-  });
-});
-
-// Copier IBAN
-function copyIBAN() {
-  const ibanInput = document.getElementById('iban');
-  ibanInput.select();
-  ibanInput.setSelectionRange(0, 99999);
-  document.execCommand("copy");
-  alert("IBAN copié !");
-}
-
-// Supabase login/signup
-const supabaseUrl = 'https://slqadsmbippvturbxlgj.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNscWFkc21iaXBwdnR1cmJ4bGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MjIwOTEsImV4cCI6MjA3MTk5ODA5MX0.tK_rJFP7dpH0PBBkX5aEX-niVE0yNlJDOgUZpm7D2CA';
-const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
-
-// Ouverture overlay
-const userIcons = [document.getElementById('userIcon'), document.getElementById('userIconSticky')];
-const loginOverlay = document.getElementById('loginOverlay');
-userIcons.forEach(icon => icon.addEventListener('click', () => loginOverlay.style.display='flex'));
-
-// Fermeture overlay
-document.getElementById('closeLogin').addEventListener('click', () => loginOverlay.style.display='none');
-
-// Connexion
-document.getElementById('loginBtn').addEventListener('click', async ()=>{
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  const msg = document.getElementById('loginMessage');
-  if(error){ msg.style.color='#ff6666'; msg.textContent = error.message; }
-  else { msg.style.color='#4dffef'; msg.textContent = 'Connexion réussie !'; loginOverlay.style.display='none'; }
-});
-
-// Inscription
-document.getElementById('signupBtn').addEventListener('click', async ()=>{
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  const msg = document.getElementById('loginMessage');
-  if(error){ msg.style.color='#ff6666'; msg.textContent = error.message; }
-  else { msg.style.color='#4dffef'; msg.textContent = 'Compte créé ! Vérifiez votre email.'; }
-});
-</script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

@@ -4,155 +4,176 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MetaCore - Installation OS</title>
-<link rel="icon" href="iconetriangle.ico" type="image/x-icon">
+<link rel="icon" href="images/iconetriangle.ico" type="image/x-icon">
+<link rel="stylesheet" href="css/style.css">
 
 <style>
-  :root {
-    --bg-color: #111;
-    --text-color: #fff;
-    --card-bg: rgba(255,255,255,0.05);
-    --icon-color: #fff;
-    --btn-primary: #ff4d4d;
-    --btn-secondary: #4d79ff;
-  }
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg-color: #f5f5f5;
-      --text-color: #111;
-      --card-bg: rgba(0,0,0,0.05);
-      --icon-color: #111;
-      --btn-primary: #ff4d4d;
-      --btn-secondary: #4d79ff;
-    }
-  }
+  :root {
+    --bg-color: #111;
+    --text-color: #fff;
+    --card-bg: rgba(255,255,255,0.05);
+    --icon-color: #fff;
+    --btn-primary: #ff4d4d;
+    --btn-secondary: #4d79ff;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg-color: #f5f5f5;
+      --text-color: #111;
+      --card-bg: rgba(0,0,0,0.05);
+      --icon-color: #111;
+      --btn-primary: #ff4d4d;
+      --btn-secondary: #4d79ff;
+    }
+  }
+  body { margin:0; font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
 
-  body { margin:0; font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
-  .background { position: fixed; inset: 0; z-index: -1; background: linear-gradient(45deg, #ff4d4d, #4dffef, #4d4dff, #ff4dff); background-size: 600% 600%; filter: blur(120px); animation: moveBG 60s linear infinite; }
-  @keyframes moveBG { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
-
-  header { padding: 2rem; text-align: center; position: relative; transition: opacity 0.5s ease, transform 0.5s ease; }
-  header img.logo { width: 100px; transition: width 0.3s ease; }
-
-  #stickyHeader { position: fixed; top:-100px; left:0; right:0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display:flex; align-items:center; justify-content: space-between; padding:0.5rem 2rem; transition: top 0.3s ease, opacity 0.3s ease; z-index: 100; opacity:0; }
-  #stickyHeader img { width:50px; transition: width 0.3s ease; }
-  .btn { padding: 8px; border-radius: 50%; font-weight: bold; text-decoration:none; color:white; position:relative; cursor:pointer; display:flex; align-items:center; justify-content:center; background: transparent; border:none; font-size:1.2rem; transition: transform 0.2s; }
-  .btn:hover { transform: scale(1.2); }
-
-  main { max-width: 900px; margin:auto; padding:2rem; }
-  .card { display:flex; align-items:center; gap:1rem; background: var(--card-bg); backdrop-filter: blur(10px); padding:1.5rem; border-radius:1rem; margin:1rem 0; position: relative; overflow:hidden; cursor:pointer; text-decoration:none; color:var(--text-color); }
-  .card::before { content: ''; position:absolute; top:var(--y,50%); left:var(--x,50%); width:200%; height:200%; background: radial-gradient(circle 100px at center, rgba(77,255,255,0.15), transparent 80%); transform: translate(-50%, -50%); transition: top 0.1s, left 0.1s, opacity 0.3s; pointer-events:none; opacity:0; }
-  .card:hover::before { opacity:1; }
-  .card:hover { transform: translateY(-5px); box-shadow:0 15px 30px rgba(0,255,255,0.2); }
-  .card h3, .card p { margin:0; }
-  .card svg { width:40px; height:40px; fill: var(--icon-color); flex-shrink:0; }
-
-  footer { margin-top:2rem; padding:2rem 0; color: var(--text-color); text-align:center; }
-  footer a { color: var(--icon-color); text-decoration:none; transition: transform 0.2s ease; }
-  footer a:hover { transform: scale(1.2); }
-
-  @media(max-width:600px){ 
-    #stickyHeader { flex-direction: row; } 
-    .card { flex-direction: column; text-align: center; } 
-  }
+  /* FOND VIDEO */
+  #bgVideo {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    filter: blur(8px) brightness(0.85);
+  }
+  .background-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent 30%, transparent 70%, rgba(0, 0, 0, 0.4));
+    pointer-events: none;
+  }
+  header { padding: 2rem; text-align: center; position: relative; transition: opacity 0.5s ease, transform 0.5s ease; }
+  header img.logo { width: 100px; transition: width 0.3s ease; }
+  #stickyHeader { position: fixed; top:-100px; left:0; right:0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display:flex; align-items:center; justify-content: space-between; padding:0.5rem 2rem; transition: top 0.3s ease, opacity 0.3s ease; z-index: 100; opacity:0; }
+  #stickyHeader img { width:50px; transition: width 0.3s ease; }
+  .btn { padding: 8px; border-radius: 50%; font-weight: bold; text-decoration:none; color:white; position:relative; cursor:pointer; display:flex; align-items:center; justify-content:center; background: transparent; border:none; font-size:1.2rem; transition: transform 0.2s; }
+  .btn:hover { transform: scale(1.2); }
+  main { max-width: 900px; margin:auto; padding:2rem; }
+  .card { display:flex; align-items:center; gap:1rem; background: var(--card-bg); backdrop-filter: blur(10px); padding:1.5rem; border-radius:1rem; margin:1rem 0; position: relative; overflow:hidden; cursor:pointer; text-decoration:none; color:var(--text-color); }
+  .card::before { content: ''; position:absolute; top:var(--y,50%); left:var(--x,50%); width:200%; height:200%; background: radial-gradient(circle 100px at center, rgba(77,255,255,0.15), transparent 80%); transform: translate(-50%, -50%); transition: top 0.1s, left 0.1s, opacity 0.3s; pointer-events:none; opacity:0; }
+  .card:hover::before { opacity:1; }
+  .card:hover { transform: translateY(-5px); box-shadow:0 15px 30px rgba(0,255,255,0.2); }
+  .card h3, .card p { margin:0; }
+  .card svg { width:40px; height:40px; fill: var(--icon-color); flex-shrink:0; }
+  footer { margin-top:2rem; padding:2rem 0; color: var(--text-color); text-align:center; }
+  footer a { color: var(--icon-color); text-decoration:none; transition: transform 0.2s ease; }
+  footer a:hover { transform: scale(1.2); }
+  @media(max-width:600px){ 
+    #stickyHeader { flex-direction: row; } 
+    .card { flex-direction: column; text-align: center; } 
+  }
+  .sub-card { padding: 1rem 1.5rem; background: rgba(255,255,255,0.03); border-left: 3px solid var(--btn-secondary); border-radius: 8px; margin-top: 1rem; }
 </style>
 </head>
 <body>
 
-<div class="background"></div>
+<video autoplay muted loop playsinline id="bgVideo">
+  <source src="videos/bg.webm" type="video/mp4">
+</video>
+<div class="background-overlay"></div>
 
 <header id="mainHeader">
-  <img src="LogoTriangle.png" alt="Logo MetaCore" class="logo">
-  <div class="header-title">
-    <h1>Votre ordinateur a besoin d’un nouveau souffle ?</h1>
-    <p>Installation et réinstallation de systèmes d’exploitation, on gère tout 💾🖥️</p>
-  </div>
+  <img src="images/LogoTriangle.png" alt="Logo MetaCore" class="logo">
+  <div class="header-title">
+    <h1>Votre ordinateur a besoin d’un nouveau souffle ?</h1>
+    <p>Installation et réinstallation de systèmes d’exploitation, on gère tout 💾🖥️</p>
+  </div>
 </header>
 
 <div id="stickyHeader">
-  <img src="LogoTriangle.png" alt="Logo MetaCore">
-  <div style="display:flex; align-items:center; gap:10px;">
-    <a href="index.html" class="btn">🏠</a>
-    <button class="btn" onclick="window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'});">💰</button>
-  </div>
+  <img src="images/LogoTriangle.png" alt="Logo MetaCore">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <a href="index.html" class="btn">🏠</a>
+    <a href="tarifs.html" class="btn">💰</a>
+  </div>
 </div>
 
 <main>
-  <section>
-    <h2>Problèmes fréquents ?</h2>
-    <p>Windows qui bug, Linux à réinstaller ou macOS capricieux ? On a la solution pour chaque situation.</p>
-  </section>
+  <section>
+    <h2>Besoin d'un système d'exploitation neuf ?</h2>
+    <p>Que ce soit pour corriger des erreurs logicielles, passer à une nouvelle version ou simplement repartir de zéro, nous installons le système qui vous convient.</p>
+    <div class="sub-card">
+      <p><strong>PC lent et instable :</strong> un système d'exploitation neuf est souvent la meilleure solution pour retrouver une bonne performance.</p>
+    </div>
+    <div class="sub-card">
+      <p><strong>Virus et malwares persistants :</strong> la réinstallation est la seule méthode qui garantit une désinfection totale et durable.</p>
+    </div>
+    <div class="sub-card">
+      <p><strong>Nouveau disque dur ou SSD :</strong> pour que votre nouvelle pièce fonctionne, elle a besoin d'un système pour démarrer.</p>
+    </div>
+  </section>
 
-  <section>
-    <h2>Nos services d’installation 🖥️</h2>
-    <div class="card">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5z"/></svg>
-      <div>
-        <h3>Installation Windows</h3>
-        <p>On installe Windows proprement, avec tous les drivers et updates nécessaires.</p>
-      </div>
-    </div>
-    <div class="card">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 22l20-10L2 2v7l13 3-13 3v7z"/></svg>
-      <div>
-        <h3>Installation Linux</h3>
-        <p>Ubuntu, Fedora, ou votre distro préférée – on la met en place rapidement et proprement.</p>
-      </div>
-    </div>
-    <div class="card">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M2 18h20v2H2z"/></svg>
-      <div>
-        <h3>Installation macOS</h3>
-        <p>On réinstalle macOS sans stress et avec un maximum de sécurité pour vos données.</p>
-      </div>
-    </div>
-  </section>
+  ---
 
-  <section>
-    <h2>Pourquoi nous choisir ?</h2>
-    <p>Parce qu’on installe chaque OS avec soin, un soupçon d’humour et zéro prise de tête.</p>
-  </section>
+  <section>
+    <h2>Nos services d'installation</h2>
+    <p>Nous offrons une installation complète et soignée, incluant les pilotes et les mises à jour essentielles pour une utilisation immédiate et sans souci.</p>
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M495.2 73.8l-54.8-54.8a32 32 0 00-45.3 0L241.2 173.9l46.2 46.2 103.8-103.8 54.8 54.8a32 32 0 0045.3 0L495.2 119a32 32 0 000-45.2zM157.3 221.7L315.8 63.2 241.2 173.9 83.7 332.3l46.2 46.2 27.4-27.4zm-73.6 154.5l-42.5 42.5a32 32 0 000 45.3l54.8 54.8a32 32 0 0045.3 0L451.2 284.4l-46.2-46.2-27.4 27.4L137 421l-53.3-53.2zM218.4 200.7l-46.2 46.2 27.4 27.4L245.8 228.1l-27.4-27.4z"/></svg>
+      <div>
+        <h3>Installation et mise à niveau</h3>
+        <p>Nous installons le système d'exploitation de votre choix, que ce soit Windows, Linux, ou macOS. Nous pouvons également faire la mise à niveau vers une version plus récente.</p>
+      </div>
+    </div>
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M375.8 234.6a16 16 0 00-11.4 4.7l-58.4 58.4L208.2 201a16 16 0 00-22.6 22.6l103.8 103.8 58.4-58.4a16 16 0 00-11.4-27.4zM256 16c-94.4 0-171.1 76.7-171.1 171.1s76.7 171.1 171.1 171.1 171.1-76.7 171.1-171.1S350.4 16 256 16zm0 306.2c-74.4 0-135.1-60.7-135.1-135.1S181.6 31.9 256 31.9 391.1 92.6 391.1 167 330.4 322.2 256 322.2zM256 384c-112.9 0-204.8 91.9-204.8 204.8h409.6c0-112.9-91.9-204.8-204.8-204.8z"/></svg>
+      <div>
+        <h3>Sauvegarde de données</h3>
+        <p>Avant toute intervention, nous sauvegardons vos documents, photos et fichiers importants pour qu'ils soient en sécurité.</p>
+      </div>
+    </div>
+    <div class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 48c-112.9 0-204.8 91.9-204.8 204.8S143.1 457.6 256 457.6 460.8 365.7 460.8 252.8 368.9 48 256 48zm0 368c-89.9 0-163.2-73.3-163.2-163.2s73.3-163.2 163.2-163.2 163.2 73.3 163.2 163.2-73.3 163.2-163.2 163.2zM256 160a16 16 0 00-16 16v160a16 16 0 0032 0V176a16 16 0 00-16-16z"/></svg>
+      <div>
+        <h3>Installation complète (pilotes et logiciels)</h3>
+        <p>Votre ordinateur vous est rendu prêt à l'emploi. Nous installons tous les pilotes nécessaires et les logiciels de base pour une prise en main immédiate.</p>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
-  <div>© 2025 MetaCore</div>
+  <div>© 2025 MetaCore</div>
 </footer>
 
 <script>
-  const sticky = document.getElementById('stickyHeader');
-  const mainHeader = document.getElementById('mainHeader');
+  const sticky = document.getElementById('stickyHeader');
+  const mainHeader = document.getElementById('mainHeader');
 
-  window.addEventListener('scroll', () => {
-    let scroll = window.scrollY;
-    if(scroll > 150){
-      sticky.style.top = '0';
-      sticky.style.opacity = '1';
-    } else {
-      sticky.style.top = '-100px';
-      sticky.style.opacity = '0';
-    }
+  window.addEventListener('scroll', () => {
+    let scroll = window.scrollY;
+    if(scroll > 150){
+      sticky.style.top = '0';
+      sticky.style.opacity = '1';
+    } else {
+      sticky.style.top = '-100px';
+      sticky.style.opacity = '0';
+    }
 
-    if(scroll < 150){
-      mainHeader.style.opacity = 1 - scroll/150;
-      mainHeader.style.transform = `translateY(-${scroll/3}px)`;
-    } else {
-      mainHeader.style.opacity = 0;
-      mainHeader.style.transform = 'translateY(-50px)';
-    }
-  });
+    if(scroll < 150){
+      mainHeader.style.opacity = 1 - scroll/150;
+      mainHeader.style.transform = `translateY(-${scroll/3}px)`;
+    } else {
+      mainHeader.style.opacity = 0;
+      mainHeader.style.transform = 'translateY(-50px)';
+    }
+  });
 
-  document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      card.style.setProperty('--x', (e.clientX - rect.left) + 'px');
-      card.style.setProperty('--y', (e.clientY - rect.top) + 'px');
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.setProperty('--x', '50%');
-      card.style.setProperty('--y', '50%');
-    });
-  });
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--x', (e.clientX - rect.left) + 'px');
+      card.style.setProperty('--y', (e.clientY - rect.top) + 'px');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--x', '50%');
+      card.style.setProperty('--y', '50%');
+    });
+  });
 </script>
 
 </body>
 </html>
-
