@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MetaCore - Contact</title>
+<link rel="icon" href="iconetriangle.ico" type="image/x-icon">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="contact.css">
+</head>
+<body>
+
+<video autoplay muted loop playsinline id="bgVideo">
+  <source src="bg.webm" type="video/mp4">
+</video>
+<div class="background-overlay"></div>
+
+<header id="mainHeader">
+  <img src="LogoTriangle.png" alt="Logo MetaCore" class="logo">
+  <div class="header-title">
+    <h1>Contactez MetaCore</h1>
+    <p>Pour vos projets et demandes d'assistance</p>
+  </div>
+  <div class="header-buttons">
+    <a href="index.html" class="btn">Retour à l'accueil</a>
+    <img id="userIcon" src="utilisateur.png" alt="Utilisateur">
+  </div>
+</header>
+
+<div id="stickyHeader">
+  <img src="LogoTriangle.png" alt="Logo MetaCore">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <a href="index.html" class="btn">Accueil</a>
+    <img id="userIconSticky" src="utilisateur.png" alt="Utilisateur">
+  </div>
+</div>
+
+<main>
+  <div class="contact-card">
+    <h2>Formulaire de Contact</h2>
+    <p>Remplissez le formulaire ci-dessous pour nous envoyer votre demande. Que ce soit en présentiel (installation OS, réparation, optimisation) ou à distance (création de site web, logo, etc.), nous vous recontacterons au plus vite.</p>
+
+    <form id="contactForm">
+      <div class="form-group">
+        <label for="name">Votre Nom :</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Votre Email :</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="serviceType">Type de service :</label>
+        <select id="serviceType" name="serviceType" required>
+          <option value="">-- Sélectionnez une option --</option>
+          <option value="presentiel">En présentiel</option>
+          <option value="distance">À distance</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="subject">Sujet :</label>
+        <input type="text" id="subject" name="subject" required>
+      </div>
+      <div class="form-group">
+        <label for="message">Votre message :</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Envoyer le message</button>
+      <div id="formStatus"></div>
+    </form>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-ig">
+    <a href="https://instagram.com/metacore.fr" target="_blank"></a>
+  </div>
+  <div>© 2025 MetaCore</div>
+  <div style="margin-top:1rem;">
+    <a href="presentation.html" class="btn">Qui suis-je ?</a>
+  </div>
+</footer>
+
+<div id="loginOverlay">
+  <div class="login-box">
+    <button id="closeLogin" class="close">&times;</button>
+    <h2>Se connecter / S'inscrire</h2>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Mot de passe">
+    <div class="login-actions">
+      <button id="loginBtn" class="btn btn-secondary">Connexion</button>
+      <button id="signupBtn" class="btn btn-primary">S'inscrire</button>
+    </div>
+    <div id="loginMessage" class="login-message"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<script src="script.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="contact-emailjs.js"></script>
+</body>
+</html>
